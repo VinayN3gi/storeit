@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import Image from 'next/image'
 import Link from 'next/link'
-import { createAccount } from '@/lib/action/user.action'
+import { createAccount, signIn } from '@/lib/action/user.action'
 
 
 const authFormSchema =(type:string)=> { 
@@ -58,7 +58,22 @@ const AuthForm = ({ type }: { type: string }) => {
 
     const SignIn=async (email:string,password:string)=>
     {
-        
+        setLoading(true);
+        try {
+            const result=await signIn({email,password});
+            if(result.success)
+            {
+                console.log("User logged in ",result.session);
+            }
+            else
+            {
+                setErrorMessaage(result.error || 'An error occurred during user log in ');
+            }
+        } catch (error:any) {
+            setErrorMessaage(error.message || 'An error occurred during user log in')
+        }
+        setLoading(false);
+        reset();
     }
 
     const SignUp=async(email:string,password:string,fullName:string)=>
@@ -81,6 +96,7 @@ const AuthForm = ({ type }: { type: string }) => {
         setLoading(false)
         reset();
     }
+
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         

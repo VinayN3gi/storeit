@@ -48,3 +48,25 @@ export const createAccount = async ({ fullName, email, password }: { fullName: s
         return { success: false, error: error.message || 'An error has occurred, please try again later' };
     }
 };
+
+
+export const signIn=async({email,password}:{email:string,password:string})=>
+{
+    try {
+        const {account,databases}=await createAdimnClient();
+        const session=await account.createEmailPasswordSession(email,password);
+
+        return{
+            success:true,
+            session
+        };
+    } 
+    catch (error:any) {
+        handelError(error,"Error signing in user");
+        return{
+            success:false,
+            error:error.message || "An error occurred during sign in"
+        }
+        
+    }
+}
