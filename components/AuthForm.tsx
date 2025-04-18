@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input"
 import Image from 'next/image'
 import Link from 'next/link'
 import { createAccount, signIn } from '@/lib/action/user.action'
+import { useRouter } from 'next/navigation'
 
 
 const authFormSchema =(type:string)=> { 
@@ -33,6 +34,7 @@ const authFormSchema =(type:string)=> {
 
 
 const AuthForm = ({ type }: { type: string }) => {
+    const router=useRouter();
     const [isLoading, setLoading] = useState(false)
     const [errorMesage, setErrorMessaage] = useState("")
     const linkHref = type === "SignIn" ? "/sign-up" : "/sign-in"
@@ -64,6 +66,7 @@ const AuthForm = ({ type }: { type: string }) => {
             if(result.success)
             {
                 console.log("User logged in ",result.session);
+                router.replace("/home")
             }
             else
             {
@@ -84,6 +87,7 @@ const AuthForm = ({ type }: { type: string }) => {
             if(result.success)
             {
                 console.log("User created ",result.user)
+                router.replace("/home")
             }
             else
             {
