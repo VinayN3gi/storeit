@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -17,16 +16,20 @@ import { Input } from "@/components/ui/input"
 import Image from 'next/image'
 import Link from 'next/link'
 
-const formSchema = z.object({
-    fullName: z.string()
+
+const authFormSchema =(type:string)=> { 
+    return z.object({
+    fullName:type=="SignUp" ?  z.string()
         .min(2, "Full Name must be at least 2 characters")
-        .max(50, "Full Name cannot exceed 50 characters"),
+        .max(50, "Full Name cannot exceed 50 characters") : z.string().optional(),
     email: z.string()
         .email("Please enter a valid email address"),
     password: z.string()
         .min(8, "Password must be at least 8 characters")
         .max(50, "Password cannot exceed 50 characters")
-})
+})}
+
+
 
 const AuthForm = ({ type }: { type: string }) => {
     const [isLoading, setLoading] = useState(false)
@@ -38,6 +41,17 @@ const AuthForm = ({ type }: { type: string }) => {
         ? "Don't have an account ? " 
         : "Already have an account ?"
 
+    const formSchema=authFormSchema(type);
+
+    const SignIn=async (email:string,password:string)=>
+    {
+        
+    }
+
+    const SignUp=async(email:string,password:string,fullName:string)=>
+    {
+        console.log("Clicked on sign up")
+    }
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -49,7 +63,15 @@ const AuthForm = ({ type }: { type: string }) => {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+        
+        if(type=="SignUp")
+        {
+            SignUp(values.email,values.password,values.fullName!);
+        }
+        else
+        {
+            SignIn(values.email,values.password);
+        }
     }
 
     return (
