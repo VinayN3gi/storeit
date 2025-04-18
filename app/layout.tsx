@@ -24,6 +24,7 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} font-poppins antialiased`}
       >
+        <time dateTime="2016-10-25" suppressHydrationWarning />
         {children}
       </body>
     </html>
