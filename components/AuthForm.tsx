@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import Image from 'next/image'
 import Link from 'next/link'
+import { createAccount } from '@/lib/action/user.action'
 
 
 const authFormSchema =(type:string)=> { 
@@ -40,19 +41,10 @@ const AuthForm = ({ type }: { type: string }) => {
     const questionText = type === "SignIn" 
         ? "Don't have an account ? " 
         : "Already have an account ?"
+    
 
     const formSchema=authFormSchema(type);
-
-    const SignIn=async (email:string,password:string)=>
-    {
-        
-    }
-
-    const SignUp=async(email:string,password:string,fullName:string)=>
-    {
-        console.log("Clicked on sign up")
-    }
-
+    
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -61,6 +53,34 @@ const AuthForm = ({ type }: { type: string }) => {
             password: ""
         },
     })
+
+    const {reset}=form;
+
+    const SignIn=async (email:string,password:string)=>
+    {
+        
+    }
+
+    const SignUp=async(email:string,password:string,fullName:string)=>
+    {
+        setLoading(true);
+        try {
+            const result=await createAccount({fullName,email,password});
+            if(result.success)
+            {
+                console.log("User created ",result.user)
+            }
+            else
+            {
+                setErrorMessaage(result.error || 'An error occurred during sign-up');
+            }
+            
+        } catch (error:any) {
+            setErrorMessaage(error.message || 'An error occured during sign-up')
+        }
+        setLoading(false)
+        reset();
+    }
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         

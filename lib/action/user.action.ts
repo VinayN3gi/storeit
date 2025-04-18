@@ -32,7 +32,7 @@ const getUserByEmail=async(email:string)=>{
    
 }
 
-const createAccount = async ({ fullName, email, password }: { fullName: string, email: string, password: string }) => {
+export const createAccount = async ({ fullName, email, password }: { fullName: string, email: string, password: string }) => {
     try {
         const existingUser = await getUserByEmail(email);
 
