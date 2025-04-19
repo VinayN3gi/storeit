@@ -1,12 +1,15 @@
 'use client'
 import { navItems } from '@/constants'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@/provider/AuthContext'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 
 const Siderbar = () => {
+  const {user}=useAuth();
+
 
   const pathname=usePathname();
   return (
@@ -34,16 +37,32 @@ const Siderbar = () => {
                   const active=pathname===item.url;
                   return (
                   <Link key={item.name} href={item.url} className='lg:w-full '>
-                    <li className={cn('sidebar-nav-item',pathname===item.url && 'shad-active')}>
-                      <Image src={item.icon} alt={item.name} width={24} height={24}/>
-                      <p>{item.name}</p>
+                    <li className={cn('sidebar-nav-item',(pathname===item.url && 'shad-active'))}>
+                      <Image src={item.icon} alt={item.name} width={24} height={24}
+                      className={cn('nav-icon',(pathname===item.url && 'nav-icon-active'))}
+                      />
+                      <p className='hidden lg:block'>{item.name}</p>
                     </li>
                   </Link>)
                 })
               }
             </ul>
-
         </nav>
+
+        <Image
+        src="/assets/images/files-2.png"
+        alt="logo"
+        width={506}
+        height={418}
+        className='w-full'
+        />
+        
+        <div className='sidebar-user-info'>
+            <div className='hidden lg:block'>
+              <p className='subtitle-2 capitalize'>Welcome back,</p>
+              <p className='caption'>{user?.email}</p>
+            </div>
+        </div>
     </aside>
   )
 }

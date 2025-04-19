@@ -17,6 +17,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { createAccount,signIn } from '@/lib/action/user.action'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/provider/AuthContext'
 
 
 const authFormSchema =(type:string)=> { 
@@ -35,7 +36,7 @@ const authFormSchema =(type:string)=> {
 
 const AuthForm = ({ type }: { type: string }) => {
 
-    
+    const {setUser}=useAuth();
     const router=useRouter();
     const [isLoading, setLoading] = useState(false)
     const [errorMesage, setErrorMessaage] = useState("")
@@ -65,8 +66,13 @@ const AuthForm = ({ type }: { type: string }) => {
         setLoading(true);
         try {
             const result=await signIn({email,password});
-            if(result.success)
+            if(result.session)
             {
+
+                setUser({
+                    id: result.session.userId, 
+                    email: email,
+                })
                 console.log("User logged in ",result.session);
                 router.replace("/home")
             }

@@ -71,6 +71,7 @@ export const signIn=async({email,password}:{email:string,password:string})=>
     try {
         const {account,databases}=await createAdimnClient();
         const session=await account.createEmailPasswordSession(email,password);
+        
 
         return{
             success:true,
@@ -84,5 +85,25 @@ export const signIn=async({email,password}:{email:string,password:string})=>
             error:error.message
         }
         
+    }
+}
+
+export const getCurrentUser=async()=>{
+    try {
+        const {databases,account}=await createSessionClient();
+        const result=await account.get();
+        const user=await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.users,
+            [Query.equal('accountId',result.$id)]
+        )
+
+        if(user.total<=0) return null;
+
+        return user.documents[0];
+
+    } catch (error) {
+        handelError(error,'User was not fetched')
+        return null;
     }
 }

@@ -1,4 +1,6 @@
+'use client'
 import LoadingState from '@/components/LoadingState'
+import { useAuth } from '@/provider/AuthContext'
 import React from 'react'
 
 const HomePage = () => {
