@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import Image from 'next/image'
 import Link from 'next/link'
-import { createAccount, signIn } from '@/lib/action/user.action'
+import { createAccount,signIn } from '@/lib/action/user.action'
 import { useRouter } from 'next/navigation'
 
 
@@ -34,6 +34,8 @@ const authFormSchema =(type:string)=> {
 
 
 const AuthForm = ({ type }: { type: string }) => {
+
+    
     const router=useRouter();
     const [isLoading, setLoading] = useState(false)
     const [errorMesage, setErrorMessaage] = useState("")
@@ -74,9 +76,10 @@ const AuthForm = ({ type }: { type: string }) => {
             }
         } catch (error:any) {
             setErrorMessaage(error.message || 'An error occurred during user log in')
+            reset();
         }
         setLoading(false);
-        reset();
+    
     }
 
     const SignUp=async(email:string,password:string,fullName:string)=>
@@ -96,9 +99,9 @@ const AuthForm = ({ type }: { type: string }) => {
             
         } catch (error:any) {
             setErrorMessaage(error.message || 'An error occured during sign-up')
+            reset();
         }
         setLoading(false)
-        reset();
     }
 
 

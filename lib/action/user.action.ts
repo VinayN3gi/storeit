@@ -1,7 +1,7 @@
 'use server'
 
 import { ID, Query } from "node-appwrite"
-import { createAdimnClient } from "../appwrite"
+import { createAdimnClient, createSessionClient } from "../appwrite"
 import { appwriteConfig } from "../appwrite/config"
 
 
@@ -43,9 +43,25 @@ export const createAccount = async ({ fullName, email, password }: { fullName: s
         const { account, databases } = await createAdimnClient();
         const user = await account.create(ID.unique(), email, password, fullName);
 
+        const createDoc = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.users,
+            ID.unique(),
+            {
+                fullName,
+                email,
+                accountId: ID.unique()
+            }
+        )
+
+        if (!createDoc) {
+            throw new Error('Failed to create user document');
+        }
+
         return { success: true, user };
     } catch (error: any) {
-        return { success: false, error: error.message || 'An error has occurred, please try again later' };
+        handelError(error,"Failed to signIn user")
+        return { success: false, error: error.message};
     }
 };
 
@@ -65,9 +81,8 @@ export const signIn=async({email,password}:{email:string,password:string})=>
         handelError(error,"Error signing in user");
         return{
             success:false,
-            error:error.message || "An error occurred during sign in"
+            error:error.message
         }
         
     }
 }
-
