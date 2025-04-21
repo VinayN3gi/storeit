@@ -8,9 +8,7 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 
 const Siderbar = () => {
-  const {user}=useAuth();
-
-
+  
   const pathname=usePathname();
   return (
     <aside className='sidebar'>
@@ -57,12 +55,12 @@ const Siderbar = () => {
         className='w-full'
         />
         
-        <div className='sidebar-user-info'>
+        {/*<div className='sidebar-user-info'>
             <div className='hidden lg:block'>
               <p className='subtitle-2 capitalize'>Welcome back,</p>
               <p className='caption'>{user?.email}</p>
             </div>
-        </div>
+        </div>*/}
     </aside>
   )
 }
