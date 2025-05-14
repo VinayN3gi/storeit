@@ -12,14 +12,28 @@ import { navItems } from '@/constants';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
+import { logout } from '@/lib/action/user.action';
+import { motion } from 'framer-motion';
 
 const MobileNavigation = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router=useRouter();
+  const [isLoading,setLoading]=useState(false);
 
-  const logOut=()=>{
-    router.replace("/sign-in")
+
+  const logOut=async ()=>{
+    setLoading(true)
+    try {
+        const session=await logout();
+        if(session.success)
+        {
+          router.replace("/sign-in")
+        }
+    } catch (error) {
+      console.log(error)
+    }
+    setLoading(false)
   }
   return (
     <header
@@ -71,12 +85,20 @@ const MobileNavigation = () => {
             <div className="flex flex-col justify-between gap-5 items-center mt-5">
               FileUploader
               <Button type="submit" className="mobile-sign-out-button" onClick={logOut}>
-                <Image
+                {!isLoading && (<Image
                   src="/assets/icons/logout.svg"
                   alt="logout"
                   width={24}
                   height={24}
-                />
+                />)}
+                        {isLoading && (
+                            <motion.div
+                            className="w-8 h-8 border-4 border-t-transparent border-red rounded-full animate-spin"
+                            initial={{ rotate: 0 }}
+                            animate={{ rotate: 360 }}
+                            transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
+                          />
+                        )}
               </Button>
             </div>
           </nav>

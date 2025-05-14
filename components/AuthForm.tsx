@@ -199,7 +199,7 @@ const AuthForm = ({ type }: { type: string }) => {
                         {!isLoading && buttonText}
                         {isLoading && (
                             <motion.div
-                            className="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin"
+                            className="w-11 h-11 border-4 border-t-transparent border-white rounded-full animate-spin"
                             initial={{ rotate: 0 }}
                             animate={{ rotate: 360 }}
                             transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}

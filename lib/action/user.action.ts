@@ -48,13 +48,15 @@ export const createAccount = async ({
 
         const { account, databases } = await createAdminClient(); // Admin Client is used here
         const user = await account.create(ID.unique(), email, password, fullName);
-       
-        
-        (await cookies()).set("appwrite-session",appwriteConfig.jwt, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            path: "/",
+       const session = await account.createEmailPasswordSession(email, password);
+
+      (await cookies()).set("my-custom-session", session.secret, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "strict",
+        secure: true,
         });
+
 
 
         const createDoc = await databases.createDocument(
@@ -127,12 +129,7 @@ export const getCurrentUser = async () => {
 
 export const logout = async () => {
     try {
-        const { account } = await createAdminClient(); // Use the session client
-        const user = await account.get();
-        if (!user) {
-            throw new Error("User is not authenticated.");
-        }
-        console.log(user)
+        const { account } = await createSessionClient();
         await account.deleteSession("current");
         return { success: true };
     } catch (error: any) {
@@ -141,4 +138,13 @@ export const logout = async () => {
     }
 };
 
+export const getLoggedInUser=async ()=>
+{
+    try {
+        const {account}=await createSessionClient();
+        return await account.get()
+    } catch (error) {
+        return null;
+    }
+}
 
