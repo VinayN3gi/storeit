@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { createAccount,signIn } from '@/lib/action/user.action'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/provider/AuthContext'
+import { motion } from 'framer-motion'
 
 
 const authFormSchema =(type:string)=> { 
@@ -195,15 +196,14 @@ const AuthForm = ({ type }: { type: string }) => {
                     />
 
                     <Button className='form-submit-button' type="submit">
-                        {buttonText}
+                        {!isLoading && buttonText}
                         {isLoading && (
-                            <Image
-                                src="/assets/icons/loader.svg"
-                                alt="loader"
-                                width={24}
-                                height={24}
-                                className='ml-2 animate-spin'
-                            />
+                            <motion.div
+                            className="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin"
+                            initial={{ rotate: 0 }}
+                            animate={{ rotate: 360 }}
+                            transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
+                          />
                         )}
                     </Button>
 

@@ -1,47 +1,61 @@
 'use server'
+// userActions.ts
+import { ID, Query } from "node-appwrite";
+import { createAdminClient, createSessionClient } from "../appwrite";
+import { appwriteConfig } from "../appwrite/config";
+import { cookies } from "next/headers";
 
-import { ID, Query } from "node-appwrite"
-import { createAdimnClient, createSessionClient } from "../appwrite"
-import { appwriteConfig } from "../appwrite/config"
-
-
-const handelError=(error:any,message:string)=>{
-    console.log(error,message);
+// Error handling helper
+const handelError = (error: any, message: string) => {
+    console.log(error, message);
     throw error;
-}
+};
 
-
-const getUserByEmail=async(email:string)=>{
-    const {databases}=await createAdimnClient()
+// Get user by email from the database
+const getUserByEmail = async (email: string) => {
+    const { databases } = await createAdminClient(); // Admin Client is used here
 
     try {
-         const result=await databases.listDocuments(
-        appwriteConfig.databaseId,
-        appwriteConfig.users,
-        [Query.equal("email",email)]
-    )
+        const result = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.users,
+            [Query.equal("email", email)]
+        );
 
-    return result.total > 0 ? result.documents[0] : null
-    } 
-    
-    catch (error) 
-    {
-        handelError(error,'Something went wrong please try again later') 
-        return null;   
+        return result.total > 0 ? result.documents[0] : null;
+    } catch (error) {
+        handelError(error, "Something went wrong please try again later");
+        return null;
     }
-   
-}
+};
 
-export const createAccount = async ({ fullName, email, password }: { fullName: string, email: string, password: string }) => {
+// Create a new account
+export const createAccount = async ({
+    fullName,
+    email,
+    password
+}: {
+    fullName: string;
+    email: string;
+    password: string;
+}) => {
     try {
         const existingUser = await getUserByEmail(email);
 
         if (existingUser) {
-            return { success: false, error: 'User already exists' };
+            return { success: false, error: "User already exists" };
         }
 
-        const { account, databases } = await createAdimnClient();
+        const { account, databases } = await createAdminClient(); // Admin Client is used here
         const user = await account.create(ID.unique(), email, password, fullName);
+       
+        
+        (await cookies()).set("appwrite-session",appwriteConfig.jwt, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            path: "/",
+        });
+
 
         const createDoc = await databases.createDocument(
             appwriteConfig.databaseId,
@@ -52,58 +66,79 @@ export const createAccount = async ({ fullName, email, password }: { fullName: s
                 email,
                 accountId: ID.unique()
             }
-        )
+        );
 
         if (!createDoc) {
-            throw new Error('Failed to create user document');
+            throw new Error("Failed to create user document");
         }
 
         return { success: true, user };
     } catch (error: any) {
-        handelError(error,"Failed to signIn user")
-        return { success: false, error: error.message};
+        handelError(error, "Failed to sign in user");
+        return { success: false, error: error.message };
+    }
+};
+
+// User sign-in and JWT creation
+export const signIn = async ({
+    email,
+    password
+}: {
+    email: string;
+    password: string;
+}) => {
+    try {
+        const { account } = await createSessionClient(); // Create session client first (JWT will be fetched from cookies here)
+    
+        const session = await account.createEmailPasswordSession(email, password);
+        return {
+            success: true,
+            session
+        };
+    } catch (error: any) {
+        handelError(error, "Error signing in user");
+        return {
+            success: false,
+            error: error.message
+        };
+    }
+};
+
+// Get current user information
+export const getCurrentUser = async () => {
+    try {
+        const { databases, account } = await createSessionClient(); // Session Client used here
+        const result = await account.get();
+
+        const user = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.users,
+            [Query.equal("accountId", result.$id)]
+        );
+
+        if (user.total <= 0) return null;
+
+        return user.documents[0];
+    } catch (error) {
+        handelError(error, "User was not fetched");
+        return null;
+    }
+};
+
+export const logout = async () => {
+    try {
+        const { account } = await createAdminClient(); // Use the session client
+        const user = await account.get();
+        if (!user) {
+            throw new Error("User is not authenticated.");
+        }
+        console.log(user)
+        await account.deleteSession("current");
+        return { success: true };
+    } catch (error: any) {
+        console.error("Error logging out:", error);
+        return { success: false, error: error.message };
     }
 };
 
 
-export const signIn=async({email,password}:{email:string,password:string})=>
-{
-    try {
-        const {account,databases}=await createAdimnClient();
-        const session=await account.createEmailPasswordSession(email,password);
-        
-
-        return{
-            success:true,
-            session
-        };
-    } 
-    catch (error:any) {
-        handelError(error,"Error signing in user");
-        return{
-            success:false,
-            error:error.message
-        }
-        
-    }
-}
-
-export const getCurrentUser=async()=>{
-    try {
-        const {databases,account}=await createSessionClient();
-        const result=await account.get();
-        const user=await databases.listDocuments(
-            appwriteConfig.databaseId,
-            appwriteConfig.users,
-            [Query.equal('accountId',result.$id)]
-        )
-
-        if(user.total<=0) return null;
-
-        return user.documents[0];
-
-    } catch (error) {
-        handelError(error,'User was not fetched')
-        return null;
-    }
-}

@@ -11,7 +11,8 @@ export const createSessionClient = async()=>{
     if(!session || !session.value) throw new Error("No session")
 
     client.setSession(session.value) 
-    
+   
+        
     return {
         get account(){
             return new Account(client);
@@ -22,7 +23,7 @@ export const createSessionClient = async()=>{
     }
 }
 
-export const createAdimnClient=async()=>{
+export const createAdminClient=async()=>{
     const client=new Client().setEndpoint(appwriteConfig.endpointUrl).setProject(appwriteConfig.projectId).setKey(appwriteConfig.secretKey)
     
     return {

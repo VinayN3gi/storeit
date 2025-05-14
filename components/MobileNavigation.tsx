@@ -7,7 +7,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { navItems } from '@/constants';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -16,6 +16,11 @@ import { Button } from './ui/button';
 const MobileNavigation = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const router=useRouter();
+
+  const logOut=()=>{
+    router.replace("/sign-in")
+  }
   return (
     <header
       className="mobile-header"
@@ -65,7 +70,7 @@ const MobileNavigation = () => {
             <div className="h-0.5 bg-gray-200/30 w-full" />
             <div className="flex flex-col justify-between gap-5 items-center mt-5">
               FileUploader
-              <Button type="submit" className="mobile-sign-out-button">
+              <Button type="submit" className="mobile-sign-out-button" onClick={logOut}>
                 <Image
                   src="/assets/icons/logout.svg"
                   alt="logout"
