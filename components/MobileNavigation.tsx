@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import { logout } from '@/lib/action/user.action';
 import { motion } from 'framer-motion';
+import FileUploader from './FileUploader';
 
 const MobileNavigation = () => {
   const [open, setOpen] = useState(false);
@@ -83,7 +84,7 @@ const MobileNavigation = () => {
             </ul>
             <div className="h-0.5 bg-gray-200/30 w-full" />
             <div className="flex flex-col justify-between gap-5 items-center mt-5">
-              FileUploader
+              <FileUploader ownerId={''} accountId={''}/>
               <Button type="submit" className="mobile-sign-out-button" onClick={logOut}>
                 {!isLoading && (<Image
                   src="/assets/icons/logout.svg"
