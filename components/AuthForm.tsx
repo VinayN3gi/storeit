@@ -82,10 +82,11 @@ const AuthForm = ({ type }: { type: string }) => {
                 setErrorMessaage(result.error || 'An error occurred during user log in ');
             }
         } catch (error:any) {
+            setLoading(false);
             setErrorMessaage(error.message || 'An error occurred during user log in')
             reset();
         }
-        setLoading(false);
+      
     
     }
 
@@ -105,10 +106,11 @@ const AuthForm = ({ type }: { type: string }) => {
             }
             
         } catch (error:any) {
+            setLoading(false)
             setErrorMessaage(error.message || 'An error occured during sign-up')
             reset();
         }
-        setLoading(false)
+      
     }
 
 

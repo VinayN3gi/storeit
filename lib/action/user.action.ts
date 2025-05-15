@@ -130,6 +130,7 @@ export const getCurrentUser = async () => {
 export const logout = async () => {
     try {
         const { account } = await createSessionClient();
+        //(await cookies()).delete("my-custom-session");
         await account.deleteSession("current");
         return { success: true };
     } catch (error: any) {

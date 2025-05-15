@@ -31,9 +31,9 @@ const MobileNavigation = () => {
           router.replace("/sign-in")
         }
     } catch (error) {
+      setLoading(false)
       console.log(error)
-    }
-    setLoading(false)
+    } 
   }
   return (
     <header
