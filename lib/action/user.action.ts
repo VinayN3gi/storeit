@@ -90,7 +90,7 @@ export const signIn = async ({
     password: string;
 }) => {
     try {
-        const { account } = await createSessionClient(); // Create session client first (JWT will be fetched from cookies here)
+        const { account } = await createAdminClient(); // Create session client first (JWT will be fetched from cookies here)
     
         const session = await account.createEmailPasswordSession(email, password);
         return {

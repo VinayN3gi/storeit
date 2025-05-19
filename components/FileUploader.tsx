@@ -6,6 +6,7 @@ import { Button } from './ui/button'
 import { cn, convertFileToUrl, getFileType } from '@/lib/utils'
 import Image from 'next/image'
 import Thumbnail from './Thumbnail'
+import { motion } from 'framer-motion'
 
 interface FileUploaderProps {
   ownerId: string
@@ -15,12 +16,18 @@ interface FileUploaderProps {
 
 const FileUploader = ({ ownerId, accountId, className }: FileUploaderProps) => {
   const [files, setFiles] = useState<File[]>([])
+  const [isLoading,setLoading]=useState(true)
   const onDrop = useCallback(async (acceptedFiles:File[]) => {
     setFiles(acceptedFiles)
   
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+
+  const handleRemoveFile=async(e:React.MouseEvent<HTMLImageElement,MouseEvent>,fileName:string)=>{
+    e.stopPropagation()
+    setFiles((prevFiles)=>prevFiles.filter((file)=>file.name!==fileName))
+  }
   
 
   return (
@@ -43,13 +50,34 @@ const FileUploader = ({ ownerId, accountId, className }: FileUploaderProps) => {
 
               return (
                 <li key={`${file.name}-${index}`} className='uploader-preview-item'>
-                    <div className='flex items-center gap-3'>
-                        <Thumbnail 
+                    <div
+                      className='flex items-center gap-3'
+                      style={{ width: '70%', maxHeight: '56px', overflow: 'hidden' }}
+                    >
+                      <Thumbnail 
                         type={type}
                         extension={extension}
                         url={convertFileToUrl(file)}
-                        />
+                      />
+                      <div className='preview-item-name truncate' style={{ maxHeight: '56px', lineHeight: '28px' }}>
+                        {file.name} 
+                      </div> 
                     </div>
+
+                   {isLoading && (
+                            <motion.div
+                            className="w-7 h-7 border-4 border-t-transparent border-gray rounded-full animate-spin"
+                            initial={{ rotate: 0 }}
+                            animate={{ rotate: 360 }}
+                            transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
+                          />
+                        )}
+
+                    <Image src="/assets/icons/remove.svg" alt="Remove"
+                    height={24}
+                    width={24} 
+                    onClick={(e)=>handleRemoveFile(e,file.name)}
+                    />
                 </li>
               )
             })

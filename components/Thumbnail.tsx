@@ -13,7 +13,6 @@ interface ThumbnailProp{
 const Thumbnail = ({type,extension,url="",imageClassName,className}:ThumbnailProp) => {
   
   const isImage=type==="image" && extension!="svg"
-
   return (
     <figure>
         <Image src={isImage ? url:getFileIcon(extension,type)} 
