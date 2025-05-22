@@ -1,9 +1,12 @@
 import Header from '@/components/Header';
 import MobileNavigation from '@/components/MobileNavigation';
 import Siderbar from '@/components/Siderbar';
-import { getCurrentUser } from '@/lib/action/user.action';
-import { redirect } from 'next/navigation';
 import React from 'react';
+import { Toaster } from "@/components/ui/sonner"
+import { AuthProvider, useAuth } from '@/provider/AuthContext';
+import { getCurrentUser } from '@/lib/action/user.action';
+
+
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
     return (
@@ -13,10 +16,10 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                 <div className='block sm:hidden'>
                     <MobileNavigation/>
                 </div>
-                
                 <Header/>
                 <div className="main-content">{children}</div>
             </section>
+            <Toaster/>
         </main>
     );
 };
