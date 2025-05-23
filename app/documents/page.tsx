@@ -1,4 +1,5 @@
 'use client';
+import Card from '@/components/Card';
 import ShowFiles from '@/components/ShowFiles';
 import SortComponent from '@/components/SortComponent';
 import { getFiles } from '@/lib/action/file.action';
@@ -29,7 +30,6 @@ const Documentpage = () => {
   const user = useAuth();
   const email = user.user?.email;
   const id = user.user?.id;
-  console.log(`From the document page  ${id} and ${email}`)
   const [files, setFiles] = useState<Document[]>([]);
   const [isLoading, setLoading] = useState(false);
   const { refreshFlag } = useFileContext(); // listen to flag
@@ -41,14 +41,13 @@ const Documentpage = () => {
       setLoading(true);
       if (id && email) {
         const result = await getFiles({ userId: id, email });
-        console.log(result.documents);
         setFiles(result.documents);
       }
       setLoading(false);
     };
 
     fetchFiles();
-  }, [id,email,refreshFlag]);
+  }, [id,email,refreshFlag])
 
   if (isLoading) {
     return (
@@ -81,9 +80,7 @@ const Documentpage = () => {
         <section className='file-list'>
          {
           files.map((file)=>(
-            <h1 className='h1' key={file.$id}>
-              {file.name}
-            </h1>
+           <Card key={file.$id} file={file} />
           ))
          }
         </section>

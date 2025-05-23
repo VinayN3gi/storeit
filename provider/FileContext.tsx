@@ -18,7 +18,6 @@ export const FileProvider = ({ children }: { children: React.ReactNode }) => {
     </FileContext.Provider>
   );
 };
-
 export const useFileContext = () => {
   const context = useContext(FileContext);
   if (!context) throw new Error('useFileContext must be used within a FileProvider');
