@@ -3,6 +3,7 @@ import ShowFiles from '@/components/ShowFiles';
 import SortComponent from '@/components/SortComponent';
 import { getFiles } from '@/lib/action/file.action';
 import { useAuth } from '@/provider/AuthContext';
+import { useFileContext } from '@/provider/FileContext';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 
@@ -31,6 +32,9 @@ const Documentpage = () => {
   console.log(`From the document page  ${id} and ${email}`)
   const [files, setFiles] = useState<Document[]>([]);
   const [isLoading, setLoading] = useState(false);
+  const { refreshFlag } = useFileContext(); // listen to flag
+
+
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -44,7 +48,7 @@ const Documentpage = () => {
     };
 
     fetchFiles();
-  }, [id,email]);
+  }, [id,email,refreshFlag]);
 
   if (isLoading) {
     return (

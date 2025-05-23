@@ -10,6 +10,7 @@ import { MAX_FILE_SIZE } from '@/constants'
 import { toast } from 'sonner'
 import { uploadFile } from '@/lib/action/file.action'
 import { usePathname } from 'next/navigation'
+import { useFileContext } from '@/provider/FileContext'
 
 interface FileUploaderProps {
   ownerId: string
@@ -21,6 +22,7 @@ const FileUploader = ({ ownerId, accountId, className }: FileUploaderProps) => {
   const path=usePathname();
   const [files, setFiles] = useState<File[]>([])
   const [isLoading, setLoading] = useState(true)
+  const {triggerRefresh}=useFileContext()
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     setFiles(acceptedFiles)
@@ -51,6 +53,7 @@ const FileUploader = ({ ownerId, accountId, className }: FileUploaderProps) => {
     });
 
     await Promise.all(uploadPromises)
+    triggerRefresh()
     setLoading(false)
   }, [ownerId,accountId,path])
 

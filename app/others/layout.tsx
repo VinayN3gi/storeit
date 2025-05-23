@@ -3,9 +3,11 @@ import MobileNavigation from '@/components/MobileNavigation';
 import Siderbar from '@/components/Siderbar';
 import React from 'react';
 import { Toaster } from "@/components/ui/sonner"
+import { FileProvider } from '@/provider/FileContext';
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
     return (
+        <FileProvider>
         <main className="flex h-screen">
             <Siderbar/>
             <section className="flex h-full flex-1 flex-col">
@@ -17,6 +19,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
             </section>
             <Toaster/>
         </main>
+        </FileProvider>
     );
 };
 
