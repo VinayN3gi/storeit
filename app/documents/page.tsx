@@ -28,6 +28,7 @@ const Documentpage = () => {
   const user = useAuth();
   const email = user.user?.email;
   const id = user.user?.id;
+  console.log(`From the document page  ${id} and ${email}`)
   const [files, setFiles] = useState<Document[]>([]);
   const [isLoading, setLoading] = useState(false);
 
@@ -43,13 +44,13 @@ const Documentpage = () => {
     };
 
     fetchFiles();
-  }, []);
+  }, [id,email]);
 
   if (isLoading) {
     return (
-      <div className="flex">
+      <div className="flex items-center justify-center h-10">
         <motion.div
-          className="w-11 h-11 border-4 border-t-transparent red rounded-full animate-spin"
+          className="w-11 h-11 border-4 border-t-transparent border-red rounded-full animate-spin"
           initial={{ rotate: 0 }}
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}

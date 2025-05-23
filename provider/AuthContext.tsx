@@ -1,7 +1,6 @@
-// context/AuthContext.tsx
 'use client'
 
-import React, { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
 type User = {
   id: string
@@ -16,7 +15,29 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUserState] = useState<User | null>(null)
+
+  // Load user from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem('authUser')
+    if (storedUser) {
+      try {
+        setUserState(JSON.parse(storedUser))
+      } catch (error) {
+        console.error('Error parsing stored user:', error)
+      }
+    }
+  }, [])
+
+  // Save user to localStorage on change
+  const setUser = (user: User | null) => {
+    setUserState(user)
+    if (user) {
+      localStorage.setItem('authUser', JSON.stringify(user))
+    } else {
+      localStorage.removeItem('authUser')
+    }
+  }
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
