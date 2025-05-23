@@ -3,8 +3,7 @@ import MobileNavigation from '@/components/MobileNavigation';
 import Siderbar from '@/components/Siderbar';
 import React from 'react';
 import { Toaster } from "@/components/ui/sonner"
-import { AuthProvider, useAuth } from '@/provider/AuthContext';
-import { getCurrentUser } from '@/lib/action/user.action';
+
 
 
 

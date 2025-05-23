@@ -2,9 +2,10 @@
 import { createAdminClient } from "../appwrite"
 import {InputFile} from "node-appwrite/file"
 import { appwriteConfig } from "../appwrite/config";
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import { constructFileUrl, convertFileToUrl, getFileType, parseStringify } from "../utils";
 import { revalidatePath } from "next/cache";
+
 
 
 // Error handling helper
@@ -68,4 +69,43 @@ export const uploadFile=async({
         handelError(error,"Failed to upload file")
     }
     
+}
+
+interface getFilesProps{
+    userId:string | undefined,
+    email:string | undefined
+}
+
+const createQueries=(userId:string,email:string)=>{
+    const queries = [
+    Query.or([
+      Query.equal("owners", [userId]),
+      Query.contains("users", [email]),
+    ]),
+  ];
+
+  return queries
+}
+
+export const getFiles=async({
+    userId ,
+    email
+}:getFilesProps)=>{
+    const {databases}=await createAdminClient()
+    try {
+        if(!userId) throw new Error("User not found")
+
+        const queries=createQueries(userId,email!)
+        const files=await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.files,
+            queries
+        )
+
+        return parseStringify(files)
+        
+        
+    } catch (error) {
+        handelError(error,'Failed to get the files')
+    }
 }
