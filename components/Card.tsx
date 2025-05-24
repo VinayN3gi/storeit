@@ -3,6 +3,7 @@ import React from 'react'
 import Thumbnail from './Thumbnail';
 import { convertFileSize } from '@/lib/utils';
 import FormatedDateTime from './FormatedDateTime';
+import ActionDropdown from './ActionDropdown';
 
 type Document = {
   $collectionId?: string;
@@ -35,7 +36,7 @@ const Card = ({file}:CardProps) => {
             imageClassName='!size-11'
             />
             <div className='flex flex-col items-end justify-between'>
-                ActionsDropdown
+                <ActionDropdown file={file}/>
                <p className='body-1'>
                 {
                     convertFileSize(file.size!)
