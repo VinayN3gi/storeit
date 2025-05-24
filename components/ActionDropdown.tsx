@@ -1,6 +1,15 @@
 'use client';
 import React, { useState } from 'react';
-import { Dialog } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,6 +22,9 @@ import Image from 'next/image';
 import { actionsDropdownItems } from '@/constants';
 import { constructDownloadUrl } from '@/lib/utils';
 import Link from 'next/link';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { motion } from 'framer-motion';
 
 type Document = {
     $collectionId?: string;
@@ -37,12 +49,70 @@ interface CardProps {
 }
 
 const ActionDropdown = ({ file }: CardProps) => {
-    const [isMoadlOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [action, setAction] = useState<ActionType | null>(null);
+    const [name,setName]=useState(file.name)
+    const [isLoading,setLoading]=useState(false)
+    const closeAllModals=()=>{
+        setIsDropdownOpen(false)
+        setIsModalOpen(false)
+        setAction(null)
+        setName(file.name)
+
+    }
+
+    const renameFile=async()=>{
+
+    }
+
+const renderDialogContent=()=>{
+
+    if(!action) return null;
+    const {value,label}=action
 
     return (
-        <Dialog open={isMoadlOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className='shad-dialog button'>
+            <DialogHeader className='flex flex-col gap-3'>
+                <DialogTitle className='text-center text-light-100'>{label}</DialogTitle>
+                {value=="rename" && (
+                    <Input
+                    
+                    type="text"
+                    value={name}
+                    onChange={(e)=>setName(e.target.value)}
+                    />
+                )}
+            </DialogHeader>
+            {
+                ['rename','delete','share'].includes(value) && (
+                    <DialogFooter className='flex flex-col gap-3 md:flex-row'>
+                        <Button className='' onClick={() => closeAllModals()}>
+                            Cancel
+                        </Button>
+                        <Button className='capitalize' onClick={()=>renameFile()}>
+                            {!isLoading && <p>{value}</p>}
+                            {isLoading && 
+                                (
+                            <motion.div
+                            className="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"
+                            initial={{ rotate: 0 }}
+                            animate={{ rotate: 360 }}
+                            transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
+                          />
+                        )
+                            
+                            }
+                        </Button>
+                    </DialogFooter>
+                )
+            }
+        </DialogContent>
+    )
+}
+
+    return (
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
                 <DropdownMenuTrigger className="shad-no-focus">
                     <Image src="/assets/icons/dots.svg" alt="dots" width={34} height={34} />
@@ -59,10 +129,11 @@ const ActionDropdown = ({ file }: CardProps) => {
                             onClick={() => {
                                 setAction(actionItems);
                                 if (
-                                    ['Rename', 'Share', 'Delete', 'Details'].includes(
+                                    ['rename', 'share', 'delete', 'details'].includes(
                                         actionItems.value
                                     )
                                 ) {
+                                   
                                     setIsModalOpen(true);
                                 }
                             }}
@@ -96,6 +167,9 @@ const ActionDropdown = ({ file }: CardProps) => {
                     ))}
                 </DropdownMenuContent>
             </DropdownMenu>
+            {
+                renderDialogContent()
+            }
         </Dialog>
     );
 };
