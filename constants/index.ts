@@ -8,11 +8,11 @@ export const navItems=[
 
 
 export const actionsDropdownItems = [
-  {
+  /*{
     label: "Rename",
     icon: "/assets/icons/edit.svg",
     value: "rename",
-  },
+  },*/
   {
     label: "Details",
     icon: "/assets/icons/info.svg",

@@ -26,7 +26,7 @@ import { Button } from './ui/button';
 import { motion } from 'framer-motion';
 import { renameFile } from '@/lib/action/file.action';
 import { usePathname } from 'next/navigation';
-import { FileDetails } from './ActionModalContent';
+import { FileDetails, ShareInput } from './ActionModalContent';
 
 type Document = {
     $collectionId?: string;
@@ -65,6 +65,8 @@ const ActionDropdown = ({ file }: CardProps) => {
     const [name, setName] = useState(file.name);
     const [isLoading, setLoading] = useState(false);
     const path = usePathname();
+    const [emails,setEmails]=useState<string[]>([]);
+
 
     const closeAllModals = () => {
         setIsDropdownOpen(false);
@@ -91,6 +93,10 @@ const ActionDropdown = ({ file }: CardProps) => {
         setLoading(false);
     };
 
+    const removeUser=()=>{
+
+    }
+
     const renderDialogContent = () => {
         if (!action) return null;
         const { value, label } = action;
@@ -106,7 +112,12 @@ const ActionDropdown = ({ file }: CardProps) => {
                             onChange={(e) => setName(e.target.value)}
                         />
                     )}
-                    {value === "details" && file.$id && <FileDetails file={file as Required<Document>} />}
+                    {value === "details"  && <FileDetails file={file as Required<Document>} />}
+                    {
+                        value=="share" && <ShareInput file={file as Required<Document>} onInputChange={setEmails}
+                        onRemove={removeUser}
+                        />
+                    }
                 </DialogHeader>
                 {['rename', 'delete', 'share'].includes(value) && (
                     <DialogFooter className="flex flex-col gap-3 md:flex-row">
