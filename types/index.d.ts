@@ -30,6 +30,10 @@ declare interface RenameFileProps {
   name: string;
   extension: string;
   path: string;
+  url?:string;
+  type?:string,
+  accountId?:string;
+  bucketFileId?:string;
 }
 declare interface UpdateFileUsersProps {
   fileId: string;

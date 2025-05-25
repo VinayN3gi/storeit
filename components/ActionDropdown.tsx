@@ -25,6 +25,9 @@ import Link from 'next/link';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { motion } from 'framer-motion';
+import { rename } from 'fs';
+import { renameFile} from '@/lib/action/file.action';
+import { usePathname } from 'next/navigation';
 
 type Document = {
     $collectionId?: string;
@@ -48,12 +51,21 @@ interface CardProps {
     file: Document;
 }
 
+type ActionValue = 'rename' | 'share' | 'delete';
+
+type ActionType = {
+    value: ActionValue;
+    label: string;
+    icon?: string;
+};
+
 const ActionDropdown = ({ file }: CardProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [action, setAction] = useState<ActionType | null>(null);
     const [name,setName]=useState(file.name)
     const [isLoading,setLoading]=useState(false)
+    const path=usePathname();
     const closeAllModals=()=>{
         setIsDropdownOpen(false)
         setIsModalOpen(false)
@@ -62,7 +74,24 @@ const ActionDropdown = ({ file }: CardProps) => {
 
     }
 
-    const renameFile=async()=>{
+    const handleAction=async()=>{
+       if (!action) return;
+    setLoading(true);
+    let success = false;
+
+    const actions = {
+      rename: () => renameFile({ fileId: file.$id!, name, extension: file.extension!, path }),
+      share: () => console.log("Share"),
+      delete: () =>console.log("Delete")
+        
+    };
+
+    success = await actions[action.value as keyof typeof actions]();
+
+    if (success) closeAllModals();
+
+    setLoading(false);
+        
 
     }
 
@@ -77,7 +106,6 @@ const renderDialogContent=()=>{
                 <DialogTitle className='text-center text-light-100'>{label}</DialogTitle>
                 {value=="rename" && (
                     <Input
-                    
                     type="text"
                     value={name}
                     onChange={(e)=>setName(e.target.value)}
@@ -87,10 +115,10 @@ const renderDialogContent=()=>{
             {
                 ['rename','delete','share'].includes(value) && (
                     <DialogFooter className='flex flex-col gap-3 md:flex-row'>
-                        <Button className='' onClick={() => closeAllModals()}>
+                        <Button className='modal-cancel-button' onClick={() => closeAllModals()}>
                             Cancel
                         </Button>
-                        <Button className='capitalize' onClick={()=>renameFile()}>
+                        <Button className='capitalize modal-submit-button' onClick={()=>handleAction()}>
                             {!isLoading && <p>{value}</p>}
                             {isLoading && 
                                 (
@@ -101,8 +129,7 @@ const renderDialogContent=()=>{
                             transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
                           />
                         )
-                            
-                            }
+                        }
                         </Button>
                     </DialogFooter>
                 )
@@ -127,7 +154,10 @@ const renderDialogContent=()=>{
                             key={actionItems.value}
                             className="shad-dropdown-item"
                             onClick={() => {
-                                setAction(actionItems);
+                                setAction({
+                                    ...actionItems,
+                                    value: actionItems.value as ActionValue,
+                                });
                                 if (
                                     ['rename', 'share', 'delete', 'details'].includes(
                                         actionItems.value
