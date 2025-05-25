@@ -112,7 +112,6 @@ export const getFiles=async({
 
 
 
-
 export const renameFile = async ({
   fileId,
   name,
@@ -120,17 +119,42 @@ export const renameFile = async ({
   path,
 }: RenameFileProps) => {
   const { databases } = await createAdminClient();
+
   try {
     const newName = `${name}.${extension}`;
-    
+
+    const current = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.files,
+      fileId
+    );
+
+    // Safely extract relationship field IDs
+    const cleanedOwners = (current.owners ?? []).map((owner: any) =>
+      typeof owner === 'string' ? owner : owner?.$id
+    );
+    const cleanedUsers = (current.users ?? []).map((user: any) =>
+      typeof user === 'string' ? user : user?.$id
+    );
+
+    const updatePayload = {
+      name: newName,
+      // Include ALL required fields to avoid Appwrite validation errors
+      type: current.type,
+      accountId: current.accountId,
+      bucketFileId: current.bucketFileId,
+      url: current.url,
+      owners: cleanedOwners,
+      users: cleanedUsers,
+    };
+
     const updatedFile = await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.files,
       fileId,
-      {name:newName}
+      updatePayload
     );
 
-    console.log(updatedFile);
     revalidatePath(path);
     return parseStringify(updatedFile);
   } catch (error) {

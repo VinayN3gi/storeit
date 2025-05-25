@@ -1,15 +1,14 @@
 'use client';
 import React, { useState } from 'react';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -25,9 +24,9 @@ import Link from 'next/link';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { motion } from 'framer-motion';
-import { rename } from 'fs';
-import { renameFile} from '@/lib/action/file.action';
+import { renameFile } from '@/lib/action/file.action';
 import { usePathname } from 'next/navigation';
+import { FileDetails } from './ActionModalContent';
 
 type Document = {
     $collectionId?: string;
@@ -51,7 +50,7 @@ interface CardProps {
     file: Document;
 }
 
-type ActionValue = 'rename' | 'share' | 'delete';
+type ActionValue = 'rename' | 'share' | 'delete' | 'details';
 
 type ActionType = {
     value: ActionValue;
@@ -63,80 +62,73 @@ const ActionDropdown = ({ file }: CardProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [action, setAction] = useState<ActionType | null>(null);
-    const [name,setName]=useState(file.name)
-    const [isLoading,setLoading]=useState(false)
-    const path=usePathname();
-    const closeAllModals=()=>{
-        setIsDropdownOpen(false)
-        setIsModalOpen(false)
-        setAction(null)
-        setName(file.name)
+    const [name, setName] = useState(file.name);
+    const [isLoading, setLoading] = useState(false);
+    const path = usePathname();
 
-    }
-
-    const handleAction=async()=>{
-       if (!action) return;
-    setLoading(true);
-    let success = false;
-
-    const actions = {
-      rename: () => renameFile({ fileId: file.$id!, name, extension: file.extension!, path }),
-      share: () => console.log("Share"),
-      delete: () =>console.log("Delete")
-        
+    const closeAllModals = () => {
+        setIsDropdownOpen(false);
+        setIsModalOpen(false);
+        setAction(null);
+        setName(file.name);
     };
 
-    success = await actions[action.value as keyof typeof actions]();
+    const handleAction = async () => {
+        if (!action) return;
+        setLoading(true);
+        let success = false;
 
-    if (success) closeAllModals();
+        const actions = {
+            rename: () => renameFile({ fileId: file.$id!, name, extension: file.extension!, path }),
+            share: () => console.log("Share"),
+            delete: () => console.log("Delete"),
+        };
 
-    setLoading(false);
-        
+        success = await actions[action.value as keyof typeof actions]();
 
-    }
+        if (success) closeAllModals();
 
-const renderDialogContent=()=>{
+        setLoading(false);
+    };
 
-    if(!action) return null;
-    const {value,label}=action
+    const renderDialogContent = () => {
+        if (!action) return null;
+        const { value, label } = action;
 
-    return (
-        <DialogContent className='shad-dialog button'>
-            <DialogHeader className='flex flex-col gap-3'>
-                <DialogTitle className='text-center text-light-100'>{label}</DialogTitle>
-                {value=="rename" && (
-                    <Input
-                    type="text"
-                    value={name}
-                    onChange={(e)=>setName(e.target.value)}
-                    />
-                )}
-            </DialogHeader>
-            {
-                ['rename','delete','share'].includes(value) && (
-                    <DialogFooter className='flex flex-col gap-3 md:flex-row'>
-                        <Button className='modal-cancel-button' onClick={() => closeAllModals()}>
+        return (
+            <DialogContent className="shad-dialog button">
+                <DialogHeader className="flex flex-col gap-3">
+                    <DialogTitle className="text-center text-light-100">{label}</DialogTitle>
+                    {value === "rename" && (
+                        <Input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    )}
+                    {value === "details" && file.$id && <FileDetails file={file as Required<Document>} />}
+                </DialogHeader>
+                {['rename', 'delete', 'share'].includes(value) && (
+                    <DialogFooter className="flex flex-col gap-3 md:flex-row">
+                        <Button className="modal-cancel-button" onClick={closeAllModals}>
                             Cancel
                         </Button>
-                        <Button className='capitalize modal-submit-button' onClick={()=>handleAction()}>
+                        <Button className="capitalize modal-submit-button" onClick={handleAction}>
                             {!isLoading && <p>{value}</p>}
-                            {isLoading && 
-                                (
-                            <motion.div
-                            className="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"
-                            initial={{ rotate: 0 }}
-                            animate={{ rotate: 360 }}
-                            transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
-                          />
-                        )
-                        }
+                            {isLoading && (
+                                <motion.div
+                                    className="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"
+                                    initial={{ rotate: 0 }}
+                                    animate={{ rotate: 360 }}
+                                    transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
+                                />
+                            )}
                         </Button>
                     </DialogFooter>
-                )
-            }
-        </DialogContent>
-    )
-}
+                )}
+            </DialogContent>
+        );
+    };
 
     return (
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -146,7 +138,7 @@ const renderDialogContent=()=>{
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel className="max-w-[200px] truncate">
-                        {file.name!}
+                        {file.name}
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {actionsDropdownItems.map((actionItems) => (
@@ -163,12 +155,11 @@ const renderDialogContent=()=>{
                                         actionItems.value
                                     )
                                 ) {
-                                   
                                     setIsModalOpen(true);
                                 }
                             }}
                         >
-                            {actionItems.label == 'Download' ? (
+                            {actionItems.label === 'Download' ? (
                                 <Link
                                     href={constructDownloadUrl(file.bucketFileId)}
                                     download={file.name}
@@ -197,9 +188,7 @@ const renderDialogContent=()=>{
                     ))}
                 </DropdownMenuContent>
             </DropdownMenu>
-            {
-                renderDialogContent()
-            }
+            {renderDialogContent()}
         </Dialog>
     );
 };
