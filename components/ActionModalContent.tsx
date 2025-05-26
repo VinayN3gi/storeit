@@ -40,10 +40,10 @@ export const FileDetails = ({ file }: { file: Models.Document }) => {
 interface ShareInputProps {
   file: Models.Document;
   onInputChange: React.Dispatch<React.SetStateAction<string[]>>;
-  onRemove: (email: string) => void;
+
 };
 
-export const ShareInput = ({ file, onInputChange, onRemove }: ShareInputProps) => {
+export const ShareInput = ({ file, onInputChange}: ShareInputProps) => {
   return (
     <>
     <ImageThumbnail file={file}/>
@@ -73,7 +73,7 @@ export const ShareInput = ({ file, onInputChange, onRemove }: ShareInputProps) =
                         <p className='subtitle-2'>
                             {email}
                         </p>
-                        <Button onClick={()=>onRemove(email)}>
+                        <Button className='share-remove-user'>
                             <Image src="/assets/icons/remove.svg" alt="Remove" width={24} height={24}
                             className='remove-icon'
                             />

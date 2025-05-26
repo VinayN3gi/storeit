@@ -161,3 +161,42 @@ export const renameFile = async ({
     handelError(error, "Failed to rename the file");
   }
 };
+
+export const updatedFile=async({fileId,emails,path}:UpdateFileUsersProps)=>{
+  const {databases}=await createAdminClient()
+  try {
+    const updatedFile=await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.files,
+      fileId,
+      {
+        users:emails
+      }
+    )
+
+    revalidatePath(path)
+    return parseStringify(updatedFile)
+  } catch (error) {
+      handelError(error,'Unable to share')
+  }
+}
+
+export const deleteFile=async({fileId,bucketFileId,path}:DeleteFileProps)=>{
+  const {databases,storage}=await createAdminClient()
+  try {
+    const deletedFile=await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.files,
+      fileId,
+    )
+    if(deletedFile)
+    {
+      await storage.deleteFile(appwriteConfig.bucketId,bucketFileId)
+    }
+
+    revalidatePath(path)
+    return parseStringify(deletedFile)
+  } catch (error) {
+      handelError(error,'Unable to share')
+  }
+}

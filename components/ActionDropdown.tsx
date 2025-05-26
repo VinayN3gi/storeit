@@ -3,11 +3,9 @@ import React, { useState } from 'react';
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 import {
     DropdownMenu,
@@ -24,9 +22,10 @@ import Link from 'next/link';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { motion } from 'framer-motion';
-import { renameFile } from '@/lib/action/file.action';
+import { deleteFile, renameFile, updatedFile } from '@/lib/action/file.action';
 import { usePathname } from 'next/navigation';
 import { FileDetails, ShareInput } from './ActionModalContent';
+import { useFileContext } from '@/provider/FileContext';
 
 type Document = {
     $collectionId?: string;
@@ -66,6 +65,7 @@ const ActionDropdown = ({ file }: CardProps) => {
     const [isLoading, setLoading] = useState(false);
     const path = usePathname();
     const [emails,setEmails]=useState<string[]>([]);
+    const {triggerRefresh}=useFileContext()
 
 
     const closeAllModals = () => {
@@ -82,20 +82,17 @@ const ActionDropdown = ({ file }: CardProps) => {
 
         const actions = {
             rename: () => renameFile({ fileId: file.$id!, name, extension: file.extension!, path }),
-            share: () => console.log("Share"),
-            delete: () => console.log("Delete"),
+            share: () => updatedFile({fileId:file.$id!,emails,path}),
+            delete: () => deleteFile({fileId:file.$id!,path,bucketFileId:file.bucketFileId})
         };
 
         success = await actions[action.value as keyof typeof actions]();
 
         if (success) closeAllModals();
-
+        triggerRefresh()
         setLoading(false);
     };
 
-    const removeUser=()=>{
-
-    }
 
     const renderDialogContent = () => {
         if (!action) return null;
@@ -115,8 +112,15 @@ const ActionDropdown = ({ file }: CardProps) => {
                     {value === "details"  && <FileDetails file={file as Required<Document>} />}
                     {
                         value=="share" && <ShareInput file={file as Required<Document>} onInputChange={setEmails}
-                        onRemove={removeUser}
                         />
+                    }
+                    {
+                        value=="delete" && (
+                            <p className='delete-confirmation'>
+                                Are you sure you want to delete {' '}
+                                <span className='delete-file-name'>{file.name}</span>
+                            </p>
+                        )
                     }
                 </DialogHeader>
                 {['rename', 'delete', 'share'].includes(value) && (

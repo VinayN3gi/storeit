@@ -32,7 +32,7 @@ const Documentpage = () => {
   const id = user.user?.id;
   const [files, setFiles] = useState<Document[]>([]);
   const [isLoading, setLoading] = useState(false);
-  const { refreshFlag } = useFileContext(); // listen to flag
+  const { refreshFlag } = useFileContext(); 
 
 
 
