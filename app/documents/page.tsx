@@ -40,7 +40,7 @@ const Documentpage = () => {
     const fetchFiles = async () => {
       setLoading(true);
       if (id && email) {
-        const result = await getFiles({ userId: id, email });
+        const result = await getFiles({ userId: id, email ,type1:'document'});
         setFiles(result.documents);
       }
       setLoading(false);

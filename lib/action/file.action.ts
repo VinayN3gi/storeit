@@ -70,32 +70,42 @@ export const uploadFile=async({
     }
     
 }
+//document | image | video | audio | other
 
 interface getFilesProps{
     userId:string | undefined,
-    email:string | undefined
+    email:string | undefined,
+    type1:string | undefined,
+    type2?:string | undefined
 }
 
-const createQueries=(userId:string,email:string)=>{
+const createQueries=(userId:string,email:string,types:string[])=>{
+    console.log(types)
     const queries = [
     Query.or([
       Query.equal("owners", [userId]),
       Query.contains("users", [email]),
     ]),
   ];
+    if(types.length > 0) queries.push(Query.equal("type", types))
 
   return queries
 }
 
 export const getFiles=async({
     userId ,
-    email
+    email,
+    type1,
+    type2
 }:getFilesProps)=>{
     const {databases}=await createAdminClient()
     try {
         if(!userId) throw new Error("User not found")
+        const types=[];
+        types.push(type1!);
+        if(type2) types.push(type2)
 
-        const queries=createQueries(userId,email!)
+        const queries=createQueries(userId,email!,types)
         const files=await databases.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.files,
