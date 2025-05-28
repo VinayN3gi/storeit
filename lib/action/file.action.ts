@@ -76,11 +76,13 @@ interface getFilesProps{
     userId:string | undefined,
     email:string | undefined,
     type1:string | undefined,
-    type2?:string | undefined
+    type2?:string | undefined,
+    searchText:string,
+    sortText:string,
+    limit?:number
 }
 
-const createQueries=(userId:string,email:string,types:string[])=>{
-    console.log(types)
+const createQueries=(userId:string,email:string,types:string[],searchText:string,sortText:string,limit?:number)=>{
     const queries = [
     Query.or([
       Query.equal("owners", [userId]),
@@ -89,6 +91,14 @@ const createQueries=(userId:string,email:string,types:string[])=>{
   ];
     if(types.length > 0) queries.push(Query.equal("type", types))
 
+    if(searchText!=" ") queries.push(Query.contains("name", searchText))
+
+    if(limit) queries.push(Query.limit(limit))
+
+    const [sortBy,orderBy]=sortText.split("-");
+    queries.push(orderBy=="asc" ? Query.orderAsc(sortBy) : Query.orderDesc(sortBy))
+    
+
   return queries
 }
 
@@ -96,16 +106,21 @@ export const getFiles=async({
     userId ,
     email,
     type1,
-    type2
+    type2,
+    searchText,
+    sortText,
+    limit
 }:getFilesProps)=>{
     const {databases}=await createAdminClient()
+    console.log(`The search and sort text are ${searchText} and ${sortText}`)
     try {
         if(!userId) throw new Error("User not found")
+        if(!email) throw new Error("Email not found")
         const types=[];
         types.push(type1!);
         if(type2) types.push(type2)
 
-        const queries=createQueries(userId,email!,types)
+        const queries=createQueries(userId, email, types, searchText, sortText, limit)
         const files=await databases.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.files,

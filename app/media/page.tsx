@@ -26,7 +26,7 @@ type Document = {
   users?: string[];
 };
 
-const Mediapage = () => {
+const Mediapage = ({searchParams}:SearchParamProps) => {
   const user = useAuth();
   const email = user.user?.email;
   const id = user.user?.id;
@@ -37,18 +37,22 @@ const Mediapage = () => {
 
 
   useEffect(() => {
+
     const fetchFiles = async () => {
+      //http://localhost:3000/documents?query=%22Hi%22&sort=%22Hello%22
+      const search=((await searchParams)?.query as string) || " ";
+      const sort=((await searchParams)?.sort as string) || "$createdAt-desc";
       setLoading(true);
       if (id && email) {
-        const result = await getFiles({ userId: id, email ,type1:'video',type2:"audio"});
+        const result = await getFiles({ userId: id, email ,type1:'video',type2:'audio',searchText:search,sortText:sort});
         setFiles(result.documents);
       }
       setLoading(false);
     };
 
+    
     fetchFiles();
   }, [id,email,refreshFlag])
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-10">

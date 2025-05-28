@@ -26,26 +26,30 @@ type Document = {
   users?: string[];
 };
 
-const Documentpage = () => {
+const Documentpage = ({searchParams}:SearchParamProps) => {
   const user = useAuth();
   const email = user.user?.email;
   const id = user.user?.id;
   const [files, setFiles] = useState<Document[]>([]);
   const [isLoading, setLoading] = useState(false);
   const { refreshFlag } = useFileContext(); 
-
-
+  
 
   useEffect(() => {
+
     const fetchFiles = async () => {
+      //http://localhost:3000/documents?query=%22Hi%22&sort=%22Hello%22
+      const search=((await searchParams)?.query as string) || " ";
+      const sort=((await searchParams)?.sort as string) || "$createdAt-desc";
       setLoading(true);
       if (id && email) {
-        const result = await getFiles({ userId: id, email ,type1:'document'});
+        const result = await getFiles({ userId: id, email ,type1:'document',searchText:search,sortText:sort});
         setFiles(result.documents);
       }
       setLoading(false);
     };
 
+    
     fetchFiles();
   }, [id,email,refreshFlag])
 
