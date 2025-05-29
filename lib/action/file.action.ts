@@ -75,7 +75,7 @@ export const uploadFile=async({
 interface getFilesProps{
     userId:string | undefined,
     email:string | undefined,
-    type1:string | undefined,
+    type1?:string | undefined,
     type2?:string | undefined,
     searchText:string,
     sortText:string | undefined,
@@ -121,7 +121,7 @@ export const getFiles=async({
         if(!userId) throw new Error("User not found")
         if(!email) throw new Error("Email not found")
         const types=[];
-        types.push(type1!);
+        if(type1) types.push(type1);
         if(type2) types.push(type2)
 
         const queries=createQueries(userId, email, types, searchText, sortText, limit)
