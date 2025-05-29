@@ -78,7 +78,7 @@ interface getFilesProps{
     type1:string | undefined,
     type2?:string | undefined,
     searchText:string,
-    sortText:string,
+    sortText:string | undefined,
     limit?:number
 }
 
@@ -95,9 +95,13 @@ const createQueries=(userId:string,email:string,types:string[],searchText:string
 
     if(limit) queries.push(Query.limit(limit))
 
-    const [sortBy,orderBy]=sortText.split("-");
-    queries.push(orderBy=="asc" ? Query.orderAsc(sortBy) : Query.orderDesc(sortBy))
-    
+    if(sortText.includes("-"))
+    {
+      const [sortBy,orderBy]=sortText.split("-");
+      queries.push(orderBy=="asc" ? Query.orderAsc(sortBy) : Query.orderDesc(sortBy))
+    }
+
+   
 
   return queries
 }
@@ -108,7 +112,7 @@ export const getFiles=async({
     type1,
     type2,
     searchText,
-    sortText,
+    sortText="$createdAt-desc",
     limit
 }:getFilesProps)=>{
     const {databases}=await createAdminClient()
