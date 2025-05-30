@@ -232,12 +232,12 @@ export const deleteFile=async({fileId,bucketFileId,path}:DeleteFileProps)=>{
 
 export async function getTotalSpaceUsed({userId,email}:{userId:string,email:string}) {
   try {
-    const { databases } = await createSessionClient();
+    const { databases } = await createAdminClient();
     
     const files = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.files,
-      [Query.equal("owner", [userId])],
+      [Query.equal("owners", [userId])],
     );
 
     const totalSpace = {
