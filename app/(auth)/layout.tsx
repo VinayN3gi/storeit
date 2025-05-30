@@ -7,10 +7,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <section className="bg-brand p-10 hidden w-1/2 items-center justify-between lg:flex xl:w-2/5">
                 <div className="flex max-h-[800px] max-w-[430px] flex-col justify-center space-y-12">
                     <Image
-                        src="/favicon.ico"
+                        src="/assets/images/logo.png"
                         alt="logo"
                         width={124}
-                        height={42}
+                        height={120}
                         className="h-auto"
                     />
                     <div className="space-y-5 text-white">
@@ -31,10 +31,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </section>
             <section className='flex flex-1 flex-col items-center bg-white p-4 py-10 lg:justify-center lg:p-10 lg:py-0'>
                 <div className='mg-16 lg:hidden'>
-                    <Image src="/favicon.ico"
+                    <Image src="/assets/images/logo.png"
                     alt="logo"
                     width={224}
-                    height={82}
+                    height={100}
                     className='h-auto w-[200px] lg:w-[250px]'
                     />    
                 </div>

@@ -13,7 +13,7 @@ const Sidebar = () => {
     <aside className="sidebar">
       <Link href="/">
         <Image
-          src="/assets/icons/logo-full-brand.svg"
+          src="/assets/images/logo.png"
           alt="logo"
           width={160}
           height={50}

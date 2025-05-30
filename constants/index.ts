@@ -42,14 +42,6 @@ export const sortTypes = [
     label: "Name (Z-A)",
     value: "name-desc",
   },
-  {
-    label: "Size (Highest)",
-    value: "size-desc",
-  },
-  {
-    label: "Size (Lowest)",
-    value: "size-asc",
-  },
 ];
 
 export const MAX_FILE_SIZE = 50 * 1024 * 1024; 

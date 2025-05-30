@@ -1,6 +1,5 @@
 'use client';
 import Card from '@/components/Card';
-import ShowFiles from '@/components/ShowFiles';
 import SortComponent from '@/components/SortComponent';
 import { getFiles } from '@/lib/action/file.action';
 import { useAuth } from '@/provider/AuthContext';
