@@ -15,18 +15,12 @@ const Header = () => {
   const userId=user.user?.id
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
+  const {setUser}=useAuth()
 
-  const logOut = async () => {
+  const logOut = () => {
     setLoading(true);
-    try {
-      const session = await logout();
-      if (session.success) {
-        router.replace('/sign-in');
-      }
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
+    router.push("/sign-in")
+    setLoading(false)
   };
 
   return (
@@ -37,8 +31,7 @@ const Header = () => {
           ownerId={userId!}
           accountId={userId!}
         />
-        <form>
-          <Button type="submit" className="sign-out-button" onClick={()=>logOut()}>
+          <Button type="submit" className="sign-out-button" onClick={logOut}>
             {!isLoading && (
               <Image
                 src="/assets/icons/logout.svg"
@@ -50,14 +43,13 @@ const Header = () => {
             )}
             {isLoading && (
               <motion.div
-                className="w-6 h-6 border-4 border-t-transparent border-red rounded-full animate-spin"
+                className="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"
                 initial={{ rotate: 0 }}
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
               />
             )}
           </Button>
-        </form>
       </div>
     </header>
   );

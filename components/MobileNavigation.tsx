@@ -27,16 +27,8 @@ const MobileNavigation = () => {
 
   const logOut=async ()=>{
     setLoading(true)
-    try {
-        const session=await logout();
-        if(session.success)
-        {
-          router.replace("/sign-in")
-        }
-    } catch (error) {
-      setLoading(false)
-      console.log(error)
-    } 
+    router.replace("/sign-in")
+    setLoading(false)
   }
   return (
     <header
@@ -96,7 +88,7 @@ const MobileNavigation = () => {
                 />)}
                         {isLoading && (
                             <motion.div
-                            className="w-8 h-8 border-4 border-t-transparent border-red rounded-full animate-spin"
+                            className="w-8 h-8 border-4 border-t-transparent border-white rounded-full animate-spin"
                             initial={{ rotate: 0 }}
                             animate={{ rotate: 360 }}
                             transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
