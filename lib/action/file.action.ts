@@ -85,7 +85,7 @@ interface getFilesProps{
 const createQueries=(userId:string,email:string,types:string[],searchText:string,sortText:string,limit?:number)=>{
     const queries = [
     Query.or([
-      Query.equal("owners", [userId]),
+      Query.equal("accountId", [userId]),
       Query.contains("users", [email]),
     ]),
   ];
