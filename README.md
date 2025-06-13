@@ -1,5 +1,5 @@
 # DropIt Website
-Authenticate using Appwrite to access your drive.Upload files via drag-and-drop or file picker.Create folders and organize your files.Click on files to preview them directly in the browser. A companion mobile application built with React Native + Expo is also available. Both web and mobile apps are seamlessly integrated via Appwrite.
+Authenticate using Appwrite to access your drive.Upload files via drag-and-drop or file picker.Create folders and organize your files.Click on files to preview them directly in the browser. A companion mobile application built with React Native + Expo is also available. Both web and mobile apps are seamlessly integrated via Appwrite. Link to mobile application repo https://github.com/VinayN3gi/dropItApp
 
 
 
