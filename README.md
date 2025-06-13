@@ -51,8 +51,8 @@ To run the project locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/VinayN3gi/psychtest.git
-   cd psychtest
+   https://github.com/VinayN3gi/storeit.git
+   cd storeit
 2. Install depenpendencies:
     ```bash
     npm install
