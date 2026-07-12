@@ -29,28 +29,28 @@ interface CardProps{
 
 const Card = ({file}:CardProps) => {
   return (
-    <Link href={file.url} target='_blank' className='file-card'>
-        <div className='flex justify-between'>
-            <Thumbnail type={file.type} extension={file.url} 
-            className='!size-20'
-            imageClassName='!size-11'
+    <Link href={file.url} target='_blank' className='file-card group'>
+        <div className='flex justify-between items-start'>
+            <Thumbnail 
+              type={file.type} 
+              extension={file.extension || ""} 
+              url={file.url} 
+              className='!size-16 rounded-full shadow-sm transition-all duration-200 group-hover:scale-105 group-hover:shadow-drop-1'
+              imageClassName='!size-9'
             />
-            <div className='flex flex-col items-end justify-between'>
+            <div className='flex flex-col items-end justify-between h-16'>
                 <ActionDropdown file={file}/>
-               <p className='body-1'>
-                {
-                    convertFileSize(file.size!)
-                }
-            </p> 
+                <p className='body-2 font-medium text-brand bg-brand/10 px-3 py-1 rounded-full'>
+                  {convertFileSize(file.size!)}
+                </p> 
             </div>
         </div>
         <div className='file-card-details'>
-            <p className='subtitle-2 line-clamp-1'>
+            <p className='subtitle-2 line-clamp-1 group-hover:text-brand transition-colors duration-200'>
                   {file.name}
             </p>
-            <FormatedDateTime date={file.$createdAt!} className="body-2 text-light-100"/>
+            <FormatedDateTime date={file.$createdAt!} className="body-2 text-light-200"/>
         </div>
-      
     </Link>
   )
 }

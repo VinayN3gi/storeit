@@ -18,6 +18,7 @@ import { createAccount,signIn } from '@/lib/action/user.action'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/provider/AuthContext'
 import { motion } from 'framer-motion'
+import { Eye, EyeOff } from 'lucide-react'
 
 
 const authFormSchema =(type:string)=> { 
@@ -40,6 +41,7 @@ const AuthForm = ({ type }: { type: string }) => {
     const router=useRouter();
     const [isLoading, setLoading] = useState(false)
     const [errorMesage, setErrorMessaage] = useState("")
+    const [showPassword, setShowPassword] = useState(false)
     const linkHref = type === "SignIn" ? "/sign-up" : "/sign-in"
     const buttonText = type === "SignIn" ? "Sign In" : "Sign Up"
     const linkText = type === "SignIn" ? "Sign Up" : "Sign In"
@@ -128,20 +130,27 @@ const AuthForm = ({ type }: { type: string }) => {
     return (
         <>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 auth-form">
-                    <h1 className='form-title mt-8'>
-                        {type === "SignIn" ? "Sign In" : "Sign Up"}
-                    </h1>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 auth-form">
+                    <div className="space-y-2 text-center md:text-left">
+                        <h1 className='form-title'>
+                            {type === "SignIn" ? "Sign In" : "Create Account"}
+                        </h1>
+                        <p className="text-[14px] text-slate-500 leading-[20px]">
+                            {type === "SignIn" 
+                              ? "Welcome back! Please enter your details to access your storage." 
+                              : "Get started for free and manage your files securely."}
+                        </p>
+                    </div>
 
                     {/* For the username */}
-                    {type === "SignUp" &&
+                    {type === "SignUp" && (
                         <FormField
                             control={form.control}
                             name="fullName"
                             render={({ field }) => (
                                 <FormItem>
                                     <div className='shad-form-item'>
-                                        <FormLabel className='shad-from-label'>Full Name</FormLabel>
+                                        <FormLabel className='shad-form-label'>Full Name</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Enter your full name" className='shad-input' {...field} />
                                         </FormControl>
@@ -150,7 +159,7 @@ const AuthForm = ({ type }: { type: string }) => {
                                 </FormItem>
                             )}
                         />
-                    }
+                    )}
 
                     {/* For the email */}
                     <FormField
@@ -159,7 +168,7 @@ const AuthForm = ({ type }: { type: string }) => {
                         render={({ field }) => (
                             <FormItem>
                                 <div className='shad-form-item'>
-                                    <FormLabel className='shad-from-label'>Email</FormLabel>
+                                    <FormLabel className='shad-form-label'>Email</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="email"
@@ -180,15 +189,28 @@ const AuthForm = ({ type }: { type: string }) => {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <div className='shad-form-item'>
-                                    <FormLabel className='shad-from-label'>Password</FormLabel>
+                                <div className='shad-form-item relative'>
+                                    <FormLabel className='shad-form-label'>Password</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type='password'
-                                            placeholder="Enter your password"
-                                            className='shad-input'
-                                            {...field}
-                                        />
+                                        <div className="relative w-full flex items-center">
+                                            <Input
+                                                type={showPassword ? 'text' : 'password'}
+                                                placeholder="Enter your password"
+                                                className='shad-input pr-10'
+                                                {...field}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword((prev) => !prev)}
+                                                className="absolute right-0 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors"
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff className="w-5 h-5" />
+                                                ) : (
+                                                    <Eye className="w-5 h-5" />
+                                                )}
+                                            </button>
+                                        </div>
                                     </FormControl>
                                 </div>
                                 <FormMessage className='shad-form-message' />
@@ -196,29 +218,32 @@ const AuthForm = ({ type }: { type: string }) => {
                         )}
                     />
 
-                    <Button className='form-submit-button' type="submit">
+                    <Button className='form-submit-button w-full' type="submit" disabled={isLoading}>
                         {!isLoading && buttonText}
                         {isLoading && (
-                            <motion.div
-                            className="w-11 h-11 border-4 border-t-transparent border-white rounded-full animate-spin"
-                            initial={{ rotate: 0 }}
-                            animate={{ rotate: 360 }}
-                            transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
-                          />
+                            <div className="flex items-center justify-center gap-2">
+                                <motion.div
+                                    className="w-5 h-5 border-2 border-t-transparent border-white rounded-full animate-spin"
+                                    initial={{ rotate: 0 }}
+                                    animate={{ rotate: 360 }}
+                                    transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
+                                />
+                                <span>Processing...</span>
+                            </div>
                         )}
                     </Button>
 
-                    {errorMesage &&
+                    {errorMesage && (
                         <p className='error-message'>{errorMesage}</p>
-                    }
+                    )}
 
-                    <div className='body flex flex-2 justify-center'>
-                        <p className='text-light-100'>
+                    <div className='body flex justify-center text-[14px] mt-4'>
+                        <p className='text-slate-500'>
                             {questionText}
                         </p>
                         <Link
                             href={linkHref}
-                            className='ml-1 font-medium text-brand-100'
+                            className='ml-1 font-semibold text-brand hover:underline'
                         >
                             {linkText}
                         </Link>

@@ -10,16 +10,19 @@ interface ThumbnailProp{
     className?:string
 }
 
-const Thumbnail = ({type,extension,url="",imageClassName}:ThumbnailProp) => {
+const Thumbnail = ({type,extension,url="",imageClassName,className}:ThumbnailProp) => {
   
-  const isImage=type==="image" && extension!="svg" && url
+  const isImage = type === "image" && extension !== "svg" && url;
+  
   return (
-    <figure>
-        <Image src={getFileIcon(extension,type)} 
-        width={100}
-        height={100}
-        className={cn("size-8 object-contain",imageClassName,isImage && "thumbnail-image")}
-        alt="thumbnail"/>
+    <figure className={cn("thumbnail flex items-center justify-center overflow-hidden bg-slate-50 border border-slate-100", className)}>
+        <Image 
+          src={isImage ? url : getFileIcon(extension, type)} 
+          width={100}
+          height={100}
+          className={cn("size-8 object-contain", imageClassName, isImage && "thumbnail-image size-full object-cover")}
+          alt="thumbnail"
+        />
     </figure>
   )
 }
