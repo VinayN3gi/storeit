@@ -241,7 +241,7 @@
     @apply mt-6 grid grid-cols-1 gap-6 xl:mt-10 xl:grid-cols-2 xl:gap-9 ;
   }
   .dashboard-summary-card {
-    @apply relative mt-6 rounded-[20px] bg-white p-5 transition-all duration-200 hover:-translate-y-1.5 hover:shadow-drop-2;
+    @apply relative mt-6 rounded-[20px] bg-white p-5 shadow-drop-3 border border-light-200/20 transition-all duration-200 hover:-translate-y-1.5 hover:shadow-drop-2;
   }
   .summary-type-icon {
     @apply absolute -left-3 top-[-25px] z-10 w-[190px] object-contain;
@@ -253,7 +253,7 @@
     @apply text-[16px] leading-[24px] font-semibold relative z-20 text-center;
   }
   .dashboard-recent-files {
-    @apply h-full rounded-[20px] bg-white p-5 xl:p-8 border-l-4 border-brand/20;
+    @apply h-full rounded-[20px] bg-white p-5 xl:p-8 border-l-4 border-brand/20 shadow-drop-3;
   }
   .recent-file-details {
     @apply flex w-full flex-col xl:flex-row xl:justify-between items-start xl:items-center;
@@ -341,7 +341,7 @@
 
   /* Card */
   .file-card {
-    @apply flex cursor-pointer flex-col gap-5 rounded-[20px] bg-white p-5 shadow-drop-3 transition-all duration-200 hover:-translate-y-1 hover:shadow-drop-2;
+    @apply flex cursor-pointer flex-col gap-5 rounded-[20px] bg-white p-5 shadow-drop-3 border border-light-200/20 transition-all duration-200 hover:-translate-y-1 hover:shadow-drop-2;
   }
   .file-card-details {
     @apply flex flex-col gap-2 text-light-100;
@@ -416,7 +416,8 @@
     @apply flex flex-1 flex-col gap-2 mt-6;
   }
   .mobile-nav-item {
-    @apply flex text-light-100 gap-4 w-full justify-start items-center text-[16px] leading-[24px] font-medium px-6 h-[56px] rounded-xl hover:bg-brand/5 transition-all duration-200;
+    @apply flex text-light-100 gap-4 w-full justify-start items-center text-[16px] leading-[24px] font-medium px-6 h-[56px] rounded-xl hover:bg-brand/5;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
   .mobile-sign-out-button {
     @apply text-[16px] leading-[24px] font-medium flex h-[56px] w-full items-center gap-4 rounded-full bg-brand/10 px-6 text-brand shadow-none transition-all hover:bg-brand/20 active:scale-95;
@@ -432,7 +433,7 @@
     @apply relative w-full md:max-w-[480px];
   }
   .search-input-wrapper {
-    @apply flex h-[52px] flex-1 items-center gap-3 rounded-full px-4 shadow-drop-3 transition-all focus-within:shadow-drop-1;
+    @apply flex h-[52px] flex-1 items-center gap-3 rounded-full px-4 bg-light-400 border border-light-200/30 shadow-none transition-all focus-within:bg-white focus-within:border-brand/30 focus-within:shadow-drop-1;
   }
   .search-input {
     @apply text-[14px] leading-[20px] font-normal outline-none ring-offset-transparent focus:ring-transparent focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0
@@ -453,7 +454,8 @@
     @apply mt-9 flex-1 gap-1 text-light-100;
   }
   .sidebar-nav-item {
-    @apply flex rounded-xl lg:w-full justify-center lg:justify-start items-center mt-1 flex-1 gap-4 lg:px-[26px] h-[52px] transition-all duration-200 hover:bg-brand/5 hover:-translate-y-px;
+    @apply flex rounded-xl lg:w-full justify-center lg:justify-start items-center mt-1 flex-1 gap-4 lg:px-[26px] h-[52px] hover:bg-brand/5;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
   .sidebar-user-info {
     @apply mt-4 flex items-center justify-center gap-3 rounded-2xl p-2.5 text-light-100 lg:justify-start lg:p-3;
@@ -467,7 +469,7 @@
   }
 
   .shad-active {
-    @apply bg-brand text-white shadow-drop-2;
+    @apply bg-brand hover:bg-brand text-white shadow-drop-2 rounded-xl;
   }
 
   /* Sort */
