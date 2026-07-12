@@ -15,19 +15,28 @@ import { Button } from './ui/button';
 import { motion } from 'framer-motion';
 import FileUploader from './FileUploader';
 import { useAuth } from '@/provider/AuthContext';
+import { logout } from '@/lib/action/user.action';
 
 const MobileNavigation = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router=useRouter();
   const [isLoading,setLoading]=useState(false);
-  const user=useAuth();
-  const userId=user.user?.id
+  const { user, setUser } = useAuth();
+  const userId=user?.id
 
   const logOut=async ()=>{
     setLoading(true)
-    router.replace("/sign-in")
-    setLoading(false)
+    try {
+      await logout();
+      setUser(null);
+      router.replace("/sign-in");
+      setOpen(false);
+    } catch (error) {
+      console.error("Failed to sign out:", error);
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <header className="mobile-header">
@@ -89,10 +98,10 @@ const MobileNavigation = () => {
               {/* User info - brand themed */}
               <div className="flex items-center gap-3 p-3 rounded-2xl bg-brand/5 border border-brand/10">
                 <div className="flex-center size-9 min-w-9 rounded-full bg-brand/15 border border-brand/20 text-brand font-bold text-xs select-none">
-                  {user.user?.email?.slice(0, 2).toUpperCase() || "US"}
+                  {user?.email?.slice(0, 2).toUpperCase() || "US"}
                 </div>
                 <div className="flex flex-col truncate">
-                  <p className="caption text-light-200 truncate">{user.user?.email || "guest@storeit.com"}</p>
+                  <p className="caption text-light-200 truncate">{user?.email || "guest@storeit.com"}</p>
                 </div>
               </div>
 

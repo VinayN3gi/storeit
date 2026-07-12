@@ -93,6 +93,14 @@ export const signIn = async ({
         const { account } = await createAdminClient(); // Create session client first (JWT will be fetched from cookies here)
     
         const session = await account.createEmailPasswordSession(email, password);
+        
+        (await cookies()).set("my-custom-session", session.secret, {
+            path: "/",
+            httpOnly: true,
+            sameSite: "strict",
+            secure: true,
+        });
+
         return {
             success: true,
             session
@@ -109,6 +117,9 @@ export const signIn = async ({
 // Get current user information
 export const getCurrentUser = async () => {
     try {
+        const session = (await cookies()).get("my-custom-session");
+        if (!session || !session.value) return null;
+
         const { databases, account } = await createSessionClient(); // Session Client used here
         const result = await account.get();
 
@@ -129,19 +140,25 @@ export const getCurrentUser = async () => {
 
 export const logout = async () => {
     try {
+        const session = (await cookies()).get("my-custom-session");
+        if (!session || !session.value) return { success: true };
+
         const { account } = await createSessionClient();
-        //(await cookies()).delete("my-custom-session");
         await account.deleteSession("current");
-        return { success: true };
     } catch (error: any) {
-        console.error("Error logging out:", error);
-        return { success: false, error: error.message };
+        console.error("Error logging out from Appwrite session:", error);
+    } finally {
+        (await cookies()).delete("my-custom-session");
     }
+    return { success: true };
 };
 
 export const getLoggedInUser=async ()=>
 {
     try {
+        const session = (await cookies()).get("my-custom-session");
+        if (!session || !session.value) return null;
+
         const {account}=await createSessionClient();
         return await account.get()
     } catch (error) {

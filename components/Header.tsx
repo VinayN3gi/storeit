@@ -7,17 +7,25 @@ import FileUploader from './FileUploader';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/provider/AuthContext';
+import { logout } from '@/lib/action/user.action';
 
 const Header = () => {
-  const user=useAuth()
-  const userId=user.user?.id
+  const { user, setUser } = useAuth();
+  const userId = user?.id;
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
 
-  const logOut = () => {
+  const logOut = async () => {
     setLoading(true);
-    router.push("/sign-in")
-    setLoading(false)
+    try {
+      await logout();
+      setUser(null);
+      router.push("/sign-in");
+    } catch (error) {
+      console.error("Failed to sign out:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

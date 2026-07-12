@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
 import { Chart } from '@/components/Chart';
 import { useFileContext } from '@/provider/FileContext';
+import { ImageViewer } from '@/components/ImageViewer';
 
 type Document = {
   $collectionId?: string;
@@ -39,6 +40,7 @@ const HomePage = () => {
   const [isLoading, setLoading] = useState(false);
   const [totalSpace, setSpace] = useState<any>();
   const { refreshFlag } = useFileContext();
+  const [activeFileViewer, setActiveFileViewer] = useState<Document | null>(null);
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -128,36 +130,55 @@ const HomePage = () => {
         <h2 className="h3 xl:h2 text-light-100">Recent files uploaded</h2>
         {files.length > 0 ? (
           <ul className="mt-5 flex flex-col gap-5">
-            {files.map((file: Document) => (
-              <Link
-                href={file.url}
-                target="_blank"
-                className="flex items-center gap-3"
-                key={file.$id}
-              >
-                <Thumbnail
-                  type={file.type}
-                  extension={file.extension!}
-                  url={file.url}
-                />
+            {files.map((file: Document) => {
+              const isImage = file.type === "image" && file.extension !== "svg";
+              return (
+                <Link
+                  href={file.url}
+                  target="_blank"
+                  onClick={(e) => {
+                    if (isImage) {
+                      e.preventDefault();
+                      setActiveFileViewer(file);
+                    }
+                  }}
+                  className="flex items-center gap-3"
+                  key={file.$id}
+                >
+                  <Thumbnail
+                    type={file.type}
+                    extension={file.extension!}
+                    url={file.url}
+                  />
 
-                <div className="recent-file-details">
-                  <div className="flex flex-col gap-1">
-                    <p className="recent-file-name">{file.name}</p>
-                    <FormatedDateTime
-                      date={file.$createdAt!}
-                      className="caption"
-                    />
+                  <div className="recent-file-details">
+                    <div className="flex flex-col gap-1">
+                      <p className="recent-file-name">{file.name}</p>
+                      <FormatedDateTime
+                        date={file.$createdAt!}
+                        className="caption"
+                      />
+                    </div>
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <ActionDropdown file={file} />
+                    </div>
                   </div>
-                  <ActionDropdown file={file} />
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </ul>
         ) : (
           <p className="empty-list">No files uploaded</p>
         )}
       </section>
+
+      {activeFileViewer && (
+        <ImageViewer 
+          file={activeFileViewer} 
+          isOpen={!!activeFileViewer} 
+          onOpenChange={(open) => !open && setActiveFileViewer(null)} 
+        />
+      )}
     </div>
   );
 };

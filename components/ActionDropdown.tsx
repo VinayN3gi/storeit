@@ -6,6 +6,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
+    DialogDescription,
 } from "@/components/ui/dialog";
 import {
     DropdownMenu,
@@ -102,6 +103,9 @@ const ActionDropdown = ({ file }: CardProps) => {
             <DialogContent className="shad-dialog button">
                 <DialogHeader className="flex flex-col gap-3">
                     <DialogTitle className="text-center text-light-100">{label}</DialogTitle>
+                    <DialogDescription className="sr-only">
+                        Action modal for {label} on {file.name}
+                    </DialogDescription>
                     {value === "rename" && (
                         <Input
                             type="text"
