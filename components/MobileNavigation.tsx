@@ -1,5 +1,5 @@
 'use client';
-import React, { useId, useState } from 'react';
+import React, {useState } from 'react';
 import {
   Sheet,
   SheetContent,
@@ -12,7 +12,6 @@ import { navItems } from '@/constants';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
-import { logout } from '@/lib/action/user.action';
 import { motion } from 'framer-motion';
 import FileUploader from './FileUploader';
 import { useAuth } from '@/provider/AuthContext';
@@ -51,7 +50,6 @@ const MobileNavigation = () => {
           <nav className="mobile-nav">
             <ul className="mobile-nav-list">
               {navItems.map((item) => {
-                const active = pathname === item.url;
                 return (
                   <Link key={item.name} href={item.url} className="lg:w-full">
                     <li

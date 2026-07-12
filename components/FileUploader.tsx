@@ -55,7 +55,7 @@ const FileUploader = ({ ownerId, accountId, className }: FileUploaderProps) => {
     await Promise.all(uploadPromises)
     triggerRefresh()
     setLoading(false)
-  }, [ownerId,accountId,path])
+  }, [ownerId,accountId,path,triggerRefresh])
 
   const { getRootProps, getInputProps} = useDropzone({ onDrop })
 

@@ -2,7 +2,6 @@
 import ActionDropdown from '@/components/ActionDropdown';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { Models } from 'node-appwrite';
 import FormatedDateTime from '@/components/FormatedDateTime';
 import Thumbnail from '@/components/Thumbnail';
 import { convertFileSize, getUsageSummary } from '@/lib/utils';
@@ -12,6 +11,7 @@ import { getFiles, getTotalSpaceUsed } from '@/lib/action/file.action';
 import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
 import { Chart } from '@/components/Chart';
+import { useFileContext } from '@/provider/FileContext';
 
 type Document = {
   $collectionId?: string;
@@ -38,9 +38,11 @@ const HomePage = () => {
   const [files, setFiles] = useState<Document[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [totalSpace, setSpace] = useState<any>();
+  const { refreshFlag } = useFileContext();
 
   useEffect(() => {
     const fetchFiles = async () => {
+
       setLoading(true);
       try {
         if (email && id) {
@@ -55,14 +57,14 @@ const HomePage = () => {
           const spaceUsed = await getTotalSpaceUsed({ userId: id, email: email });
           setSpace(spaceUsed);
         }
-      } catch (error) {
+      } catch (error: unknown) {
         console.log(error);
       }
       setLoading(false);
     };
 
     fetchFiles();
-  }, [email, id]);
+  }, [email, id ,refreshFlag,]);
 
   
 

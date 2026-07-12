@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { useAuth } from '@/provider/AuthContext';
@@ -27,7 +27,9 @@ type Document = {
   users?: string[];
 };
 
-const Search = () => {
+
+
+const SearchContent = () => {
   const [query, setQuery] = useState<string>("");
   const user = useAuth();
   const id = user.user?.id;
@@ -149,5 +151,15 @@ const Search = () => {
     </div>
   );
 };
+
+
+function Search() {
+    return (
+        <Suspense fallback={null}>
+            <SearchContent />
+        </Suspense>
+    );
+}
+
 
 export default Search;

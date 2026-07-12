@@ -4,18 +4,15 @@ import { Button } from './ui/button';
 import Image from 'next/image';
 import Search from './Search';
 import FileUploader from './FileUploader';
-import { getCurrentUser, logout } from '@/lib/action/user.action';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/provider/AuthContext';
-import { appwriteConfig } from '@/lib/appwrite/config';
 
 const Header = () => {
   const user=useAuth()
   const userId=user.user?.id
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
-  const {setUser}=useAuth()
 
   const logOut = () => {
     setLoading(true);

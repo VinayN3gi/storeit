@@ -1,6 +1,5 @@
 'use client';
 import Card from '@/components/Card';
-import ShowFiles from '@/components/ShowFiles';
 import SortComponent from '@/components/SortComponent';
 import { getFiles } from '@/lib/action/file.action';
 import { useAuth } from '@/provider/AuthContext';
@@ -49,7 +48,7 @@ const Otherspage = ({searchParams}:SearchParamProps) => {
 
     
     fetchFiles();
-  }, [id,email,refreshFlag])
+  }, [id,email,refreshFlag,searchParams])
 
   if (isLoading) {
     return (

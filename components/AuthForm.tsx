@@ -1,5 +1,5 @@
 'use client'
-import React, {useEffect, useState } from 'react'
+import React, {useState } from 'react'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -13,7 +13,6 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import Image from 'next/image'
 import Link from 'next/link'
 import { createAccount,signIn } from '@/lib/action/user.action'
 import { useRouter } from 'next/navigation'

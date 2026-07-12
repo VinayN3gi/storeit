@@ -1,11 +1,13 @@
 'use client';
+
 import Card from '@/components/Card';
 import SortComponent from '@/components/SortComponent';
 import { getFiles } from '@/lib/action/file.action';
 import { useAuth } from '@/provider/AuthContext';
 import { useFileContext } from '@/provider/FileContext';
 import { motion } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 type Document = {
   $collectionId?: string;
@@ -25,39 +27,48 @@ type Document = {
   users?: string[];
 };
 
-const Documentpage = ({searchParams}:SearchParamProps) => {
+const DocumentPageContent = () => {
   const user = useAuth();
   const email = user.user?.email;
   const id = user.user?.id;
+
   const [files, setFiles] = useState<Document[]>([]);
   const [isLoading, setLoading] = useState(false);
-  const { refreshFlag } = useFileContext(); 
-  
+
+  const { refreshFlag } = useFileContext();
+
+  // ✅ Proper way to get query params in client
+  const searchParams = useSearchParams();
+  const search = searchParams.get('query') || '';
+  const sort = searchParams.get('sort') || '';
 
   useEffect(() => {
-
     const fetchFiles = async () => {
-      //http://localhost:3000/documents?query=%22Hi%22&sort=%22Hello%22
-      const search=((await searchParams)?.query as string) || " ";
-      const sort=((await searchParams)?.sort as string) || undefined;
       setLoading(true);
+
       if (id && email) {
-        const result = await getFiles({ userId: id, email ,type1:'document',searchText:search,sortText:sort});
+        const result = await getFiles({
+          userId: id,
+          email,
+          type1: 'document',
+          searchText: search,
+          sortText: sort,
+        });
+
         setFiles(result.documents);
       }
+
       setLoading(false);
     };
 
-    
     fetchFiles();
-  }, [id,email,refreshFlag])
+  }, [id, email, refreshFlag, search, sort]);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-10">
         <motion.div
-          className="w-11 h-11 border-4 border-t-transparent border-green rounded-full animate-spin"
-          initial={{ rotate: 0 }}
+          className="w-11 h-11 border-4 border-t-transparent border-green rounded-full"
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, ease: 'linear', duration: 1 }}
         />
@@ -69,23 +80,30 @@ const Documentpage = ({searchParams}:SearchParamProps) => {
     <div className="page-container">
       <section className="w-full">
         <h1 className="h2 capitalize">Documents</h1>
+
         <div className="total-size-section">
           <p className="body-1">
             Total:<span className="h5">0 MB</span>
           </p>
+
           <div className="sort-container">
-            <p className="body-1 hidden sm:block text-light-200">Sort by:</p>
-            <SortComponent />
+            <p className="body-1 hidden sm:block text-light-200">
+              Sort by:
+            </p>
+
+            {/* ✅ FIX: Wrap in Suspense */}
+            <Suspense fallback={<div>Loading...</div>}>
+              <SortComponent />
+            </Suspense>
           </div>
         </div>
       </section>
+
       {files.length > 0 ? (
-        <section className='file-list'>
-         {
-          files.map((file)=>(
-           <Card key={file.$id} file={file} />
-          ))
-         }
+        <section className="file-list">
+          {files.map((file) => (
+            <Card key={file.$id} file={file} />
+          ))}
         </section>
       ) : (
         <p className="empty-list">No files uploaded</p>
@@ -93,5 +111,13 @@ const Documentpage = ({searchParams}:SearchParamProps) => {
     </div>
   );
 };
+
+function Documentpage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DocumentPageContent />
+    </Suspense>
+  );
+}
 
 export default Documentpage;

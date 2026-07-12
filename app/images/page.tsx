@@ -1,6 +1,5 @@
 'use client';
 import Card from '@/components/Card';
-import ShowFiles from '@/components/ShowFiles';
 import SortComponent from '@/components/SortComponent';
 import { getFiles } from '@/lib/action/file.action';
 import { useAuth } from '@/provider/AuthContext';
@@ -51,7 +50,7 @@ const Imagepage = ({searchParams}:SearchParamProps) => {
 
     
     fetchFiles();
-  }, [id,email,refreshFlag])
+  }, [id,email,refreshFlag,searchParams])
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-10">

@@ -10,7 +10,7 @@ interface ThumbnailProp{
     className?:string
 }
 
-const Thumbnail = ({type,extension,url="",imageClassName,className}:ThumbnailProp) => {
+const Thumbnail = ({type,extension,url="",imageClassName}:ThumbnailProp) => {
   
   const isImage=type==="image" && extension!="svg" && url
   return (

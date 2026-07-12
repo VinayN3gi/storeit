@@ -1,9 +1,9 @@
 'use server'
-import { createAdminClient, createSessionClient } from "../appwrite"
+import { createAdminClient} from "../appwrite"
 import {InputFile} from "node-appwrite/file"
 import { appwriteConfig } from "../appwrite/config";
 import { ID, Query } from "node-appwrite";
-import { constructFileUrl, convertFileToUrl, getFileType, parseStringify } from "../utils";
+import { constructFileUrl,getFileType, parseStringify } from "../utils";
 import { revalidatePath } from "next/cache";
 
 
@@ -23,9 +23,9 @@ export const uploadFile=async({
     const {storage,databases}=await createAdminClient()
    
 
-
     try {
         const inputFile=InputFile.fromBuffer(file,file.name)
+        console.log(`The input file is ${inputFile}`)
         console.log(appwriteConfig.bucketId)
 
         //For the file storage
@@ -233,6 +233,7 @@ export const deleteFile=async({fileId,bucketFileId,path}:DeleteFileProps)=>{
 export async function getTotalSpaceUsed({userId,email}:{userId:string,email:string}) {
   try {
     const { databases } = await createAdminClient();
+    console.log(email)
     
     const files = await databases.listDocuments(
       appwriteConfig.databaseId,

@@ -1,6 +1,8 @@
 import { getLoggedInUser } from "@/lib/action/user.action";
-import Image from "next/image";
 import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
+
 
 export default async function Home() {
  const user=await getLoggedInUser();

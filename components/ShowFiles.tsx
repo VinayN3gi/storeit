@@ -7,7 +7,12 @@ interface getFilesProps{
 }
 
 const ShowFiles = async ({userId,email}:getFilesProps) => {
-  const files=await getFiles({userId,email})
+  const files = await getFiles({
+    userId,
+    email,
+    searchText: '',
+    sortText: '$createdAt-desc'
+  });
   console.log(files)  
 
   return (
