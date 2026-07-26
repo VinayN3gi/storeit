@@ -30,7 +30,7 @@ const MobileNavigation = () => {
     try {
       await logout();
       setUser(null);
-      router.replace("/sign-in");
+      window.location.replace("/sign-in");
       setOpen(false);
     } catch (error) {
       console.error("Failed to sign out:", error);

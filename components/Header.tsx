@@ -20,7 +20,7 @@ const Header = () => {
     try {
       await logout();
       setUser(null);
-      router.push("/sign-in");
+      window.location.replace("/sign-in");
     } catch (error) {
       console.error("Failed to sign out:", error);
     } finally {

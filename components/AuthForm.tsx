@@ -76,7 +76,7 @@ const AuthForm = ({ type }: { type: string }) => {
                     email: email,
                 })
                 console.log("User logged in ",result.session);
-                router.replace("/home")
+                window.location.replace("/home");
             }
             else
             {
@@ -96,10 +96,14 @@ const AuthForm = ({ type }: { type: string }) => {
         setLoading(true);
         try {
             const result=await createAccount({fullName,email,password});
-            if(result.success)
+            if(result.success && result.user)
             {
-                console.log("User created ",result.user)
-                router.replace("/home")
+                setUser({
+                    id: result.user.$id,
+                    email: email,
+                });
+                console.log("User created ",result.user);
+                window.location.replace("/home");
             }
             else
             {

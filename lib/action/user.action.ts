@@ -66,7 +66,7 @@ export const createAccount = async ({
             {
                 fullName,
                 email,
-                accountId: ID.unique()
+                accountId: user.$id
             }
         );
 
