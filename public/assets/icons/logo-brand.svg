@@ -1,4 +1,31 @@
-<svg width="83" height="82" viewBox="0 0 83 82" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect opacity="0.2" width="74.8323" height="74.8323" rx="37.4161" fill="#FA7275"/>
-<rect x="32.7383" y="31.1797" width="49.8882" height="49.8882" rx="24.9441" fill="#FA7275"/>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#81C784"/>
+      <stop offset="100%" stop-color="#4CAF50"/>
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4CAF50"/>
+      <stop offset="100%" stop-color="#388E3C"/>
+    </linearGradient>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#388E3C"/>
+      <stop offset="100%" stop-color="#1B5E20"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <!-- Back layer (representing a file or folder) -->
+    <rect x="30" y="30" width="90" height="90" rx="24" fill="url(#grad1)"/>
+    <!-- Middle layer -->
+    <rect x="55" y="55" width="90" height="90" rx="24" fill="url(#grad2)"/>
+    <!-- Front layer -->
+    <rect x="80" y="80" width="90" height="90" rx="24" fill="url(#grad3)"/>
+    
+    <!-- Eye/Core cutout inside the front layer -->
+    <circle cx="125" cy="125" r="16" fill="#FFFFFF" opacity="0.95"/>
+  </g>
 </svg>

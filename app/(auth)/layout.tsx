@@ -13,7 +13,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 
                 <div className="relative z-10 flex max-h-[800px] max-w-[430px] flex-col justify-center space-y-12">
                     <Image
-                        src="/assets/images/logo.png"
+                        src="/assets/images/logo.svg"
                         alt="logo"
                         width={124}
                         height={120}
@@ -39,7 +39,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             {/* Right Form Panel */}
             <section className='flex flex-1 flex-col items-center bg-white p-4 py-10 lg:justify-center lg:p-10 lg:py-0 bg-gradient-to-b from-brand/[0.02] to-white'>
                 <div className='mb-16 lg:hidden'>
-                    <Image src="/assets/images/logo.png"
+                    <Image src="/assets/images/logo.svg"
                     alt="logo"
                     width={224}
                     height={100}

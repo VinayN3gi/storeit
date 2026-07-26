@@ -42,7 +42,7 @@ const MobileNavigation = () => {
     <header className="mobile-header">
       <Link href="/" className="flex items-center">
         <Image
-          src="/assets/images/logo.png"
+          src="/assets/images/logo.svg"
           alt="logo"
           width={120}
           height={38}
