@@ -80,6 +80,7 @@ const AuthForm = ({ type }: { type: string }) => {
             }
             else
             {
+                setLoading(false);
                 setErrorMessaage(result.error || 'An error occurred during user log in ');
             }
         } catch (error:any) {
@@ -107,6 +108,7 @@ const AuthForm = ({ type }: { type: string }) => {
             }
             else
             {
+                setLoading(false);
                 setErrorMessaage(result.error || 'An error occurred during sign-up');
             }
             
